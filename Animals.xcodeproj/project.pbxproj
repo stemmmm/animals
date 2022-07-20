@@ -23,6 +23,7 @@
 		7B2240782887E1760085731B /* AnimalCharacterInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B22406C2887E1760085731B /* AnimalCharacterInfoView.swift */; };
 		7B2240792887E1760085731B /* DetailedImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B22406E2887E1760085731B /* DetailedImageViewController.swift */; };
 		7B22407A2887E1760085731B /* DetailedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B22406F2887E1760085731B /* DetailedImageView.swift */; };
+		7B22407C288826D10085731B /* HeartButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B22407B288826D10085731B /* HeartButton.swift */; };
 		7B6E732F28826EC300F8D84B /* LikeListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E732E28826EC300F8D84B /* LikeListViewController.swift */; };
 		7B6E73312882887700F8D84B /* LikeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E73302882887700F8D84B /* LikeCell.swift */; };
 		7B6E73332882911900F8D84B /* CollectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E73322882911900F8D84B /* CollectionHeaderView.swift */; };
@@ -58,6 +59,7 @@
 		7B22406C2887E1760085731B /* AnimalCharacterInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimalCharacterInfoView.swift; sourceTree = "<group>"; };
 		7B22406E2887E1760085731B /* DetailedImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailedImageViewController.swift; sourceTree = "<group>"; };
 		7B22406F2887E1760085731B /* DetailedImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailedImageView.swift; sourceTree = "<group>"; };
+		7B22407B288826D10085731B /* HeartButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartButton.swift; sourceTree = "<group>"; };
 		7B6E732E28826EC300F8D84B /* LikeListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeListViewController.swift; sourceTree = "<group>"; };
 		7B6E73302882887700F8D84B /* LikeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeCell.swift; sourceTree = "<group>"; };
 		7B6E73322882911900F8D84B /* CollectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionHeaderView.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 			children = (
 				7B8B8C1D287C689B00A6E559 /* MainViewController.swift */,
 				7BF7492C287D355500FBA5C7 /* AnimalCell.swift */,
+				7B22407B288826D10085731B /* HeartButton.swift */,
 				7B22405F2887DFD60085731B /* Header */,
 			);
 			path = Main;
@@ -115,7 +118,6 @@
 			children = (
 				7B22401A288599550085731B /* FilterViewController.swift */,
 				7B22401E2885A7760085731B /* FilterCategoryButton.swift */,
-				7B224020288669A70085731B /* CustomDelegates.swift */,
 			);
 			path = Filter;
 			sourceTree = "<group>";
@@ -236,6 +238,7 @@
 			isa = PBXGroup;
 			children = (
 				7BF7492A287D238600FBA5C7 /* Constants.swift */,
+				7B224020288669A70085731B /* CustomDelegates.swift */,
 				7B22405C2887DF960085731B /* Extensions */,
 			);
 			path = Helpers;
@@ -330,6 +333,7 @@
 				7B22405E2887DF960085731B /* UIColor.swift in Sources */,
 				7B8B8C24287C689B00A6E559 /* Animals.xcdatamodeld in Sources */,
 				7B2240732887E1760085731B /* DetailViewTabbar.swift in Sources */,
+				7B22407C288826D10085731B /* HeartButton.swift in Sources */,
 				7B8B8C1A287C689B00A6E559 /* AppDelegate.swift in Sources */,
 				7B22401F2885A7760085731B /* FilterCategoryButton.swift in Sources */,
 				7B2240792887E1760085731B /* DetailedImageViewController.swift in Sources */,

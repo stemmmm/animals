@@ -10,3 +10,7 @@ import Foundation
 protocol FilterDelegate: AnyObject {
     func applyFilter(by filter: [String])
 }
+
+protocol ButtonDelegate: AnyObject {
+    func buttonTapped()
+}
