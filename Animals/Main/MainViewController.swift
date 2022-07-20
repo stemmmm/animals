@@ -5,6 +5,8 @@
 //  Created by 정호윤 on 2022/07/11.
 //
 
+// TODO: 네비게이션 바 컨텍스트 메뉴 정리
+
 // 0. 필터
 // TODO: 개 고양이 두번 리퀘스트 하는 방법?
 // TODO: 메인에서 필터에 대한 정보를 알아야 함 > 속성 하나 만들어서 저장하고 필터에 넘겨주고 그걸 받아서 다시 패치?
@@ -15,7 +17,7 @@
 // TODO: api 공고일로 검색 안되는데 어떡하지 >> 받아온 데이터를 sort?
 
 // 2.
-// TODO: 무한 스크롤 구현(https://velog.io/@yoonah-dev/Infinite-Scroll)
+// TODO: 무한 스크롤 구현(https://velog.io/@yoonah-dev/Infinite-Scroll) > 왜 맨처음에 tableview bound가 작을까?
 // TODO: fetch 기다릴때(맨 처음, 스크롤) 프로그레스 뷰 / 필터한 값 없으면 없다고 알려주기
 
 import UIKit
@@ -24,6 +26,8 @@ final class MainViewController: UIViewController {
     
     // MARK: - 네트워크 매니저
     private var networkManager = NetworkManager.shared
+    private var pageNumberQuery = 1
+    private var fetchMore = false
     
     // MARK: - 유기동물 데이터 배열
     private var animals: [Item] = []
@@ -272,30 +276,58 @@ extension MainViewController: UITableViewDelegate {
     
 }
 
+// MARK: - 무한 스크롤
+extension MainViewController {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if self.tableView.contentOffset.y >= self.tableView.contentSize.height - self.tableView.bounds.height {
+            if !fetchMore {
+                fetchMore = true
+                
+                networkManager.fetchAnimal(pageNumberQuery: pageNumberQuery) { result in
+                    self.pageNumberQuery += 1
+                    
+                    switch result {
+                    case .success(let animalDatas):
+                        self.animals.append(contentsOf: animalDatas)
+                        self.fetchMore = false
+                        DispatchQueue.main.async {
+                            self.tableView.reloadData()
+                        }
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
+            }
+        }
+    }
+    
+}
+
 // MARK: - FilterDelegate
 extension MainViewController: FilterDelegate {
     
     func applyFilter(by filter: [String]) {
         print("main: \(filter)")
         
-//        print(spices)
+        //        print(spices)
         let filtered = animals
             .filter { filter.contains(String($0.kind?.split(separator: "]").first?.split(separator: "[").last ?? "")) }
         animals = filtered
         
-//        if filter.count == 0 {
-//            return
-//        } else if filter.count == 1 {
-//            let filteredAnimals = animals.filter { $0.kind?.contains(filter[0]) ?? false }
-//            animals = filteredAnimals
-//        } else if filter.count == 2 {
-//            let firstFilteredAnimals = animals.filter { $0.kind?.contains(filter[0]) ?? false }
-//            let secondFilteredAnimals = animals.filter { $0.kind?.contains(filter[1]) ?? false }
-//            animals = firstFilteredAnimals
-//            animals.append(contentsOf: secondFilteredAnimals)
-//        } else if filter.count == 3 {
-//            return
-//        }
+        //        if filter.count == 0 {
+        //            return
+        //        } else if filter.count == 1 {
+        //            let filteredAnimals = animals.filter { $0.kind?.contains(filter[0]) ?? false }
+        //            animals = filteredAnimals
+        //        } else if filter.count == 2 {
+        //            let firstFilteredAnimals = animals.filter { $0.kind?.contains(filter[0]) ?? false }
+        //            let secondFilteredAnimals = animals.filter { $0.kind?.contains(filter[1]) ?? false }
+        //            animals = firstFilteredAnimals
+        //            animals.append(contentsOf: secondFilteredAnimals)
+        //        } else if filter.count == 3 {
+        //            return
+        //        }
         
         print("main: \(animals)")
         tableView.reloadData()
@@ -305,10 +337,10 @@ extension MainViewController: FilterDelegate {
 
 // MARK: - ButtonDelegate
 extension MainViewController: ButtonDelegate {
-
+    
     func buttonTapped() {
         print("main: button tapped")
         
     }
-
+    
 }
