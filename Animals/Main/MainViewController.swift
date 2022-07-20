@@ -5,14 +5,13 @@
 //  Created by 정호윤 on 2022/07/11.
 //
 
-// 0.
-// TODO: 하트 버튼 작동
-// TODO: 개 고양이 두번 리퀘스트 하느 방법?
+// 0. 필터
+// TODO: 개 고양이 두번 리퀘스트 하는 방법?
 // TODO: 메인에서 필터에 대한 정보를 알아야 함 > 속성 하나 만들어서 저장하고 필터에 넘겨주고 그걸 받아서 다시 패치?
 // TODO: 필터 해주는 속성 만들어서
+// TODO: 필터 다듬기(선택한 지역이 저장된 채로 필터가 돼야함) >> 지금 처럼 하면 메모리 사용량이 너무 올라가는데 어떡하지 뭐가 문제인지 모르겠음;;(클로저 때문인것 같긴함)
 
 // 1.
-// TODO: 필터 다듬기(선택한 지역이 저장된 채로 필터가 돼야함) >> 지금 처럼 하면 메모리 사용량이 너무 올라가는데 어떡하지 뭐가 문제인지 모르겠음;;(클로저 때문인것 같긴함)
 // TODO: api 공고일로 검색 안되는데 어떡하지 >> 받아온 데이터를 sort?
 
 // 2.
@@ -304,6 +303,7 @@ extension MainViewController: FilterDelegate {
     
 }
 
+// MARK: - ButtonDelegate
 extension MainViewController: ButtonDelegate {
 
     func buttonTapped() {
