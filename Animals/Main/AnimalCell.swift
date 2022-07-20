@@ -9,6 +9,9 @@ import UIKit
 
 final class AnimalCell: UITableViewCell {
     
+    // MARK: - 하트 버튼 델리게이트
+    weak var delegate: ButtonDelegate?
+    
     // MARK: - 받아온 데이터 세팅
     var animal: Item? {
         didSet {
@@ -64,12 +67,9 @@ final class AnimalCell: UITableViewCell {
         return label
     }()
     
-    private let heartButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "heart"), for: .normal)
-        button.tintColor = .gray
-        
-//        button.addTarget(self, action: #selector(likeTapped), for: <#T##UIControl.Event#>)
+    private lazy var heartButton: HeartButton = {
+        let button = HeartButton()
+        button.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -116,7 +116,14 @@ final class AnimalCell: UITableViewCell {
         labelStackView.addArrangedSubview(informationLabel)
         labelStackView.addArrangedSubview(shelterLabel)
         
-        self.addSubview(heartButton)
+        // 버튼 동작하려면 셀에 추가하는게 아니라 contentView에 추가해야함
+        contentView.addSubview(heartButton)
+    }
+    
+    // MARK: - 하트 버튼 탭 함수
+    @objc private func heartButtonTapped(sender: HeartButton) {
+        sender.isOn.toggle()
+        self.delegate?.buttonTapped()
     }
     
     // MARK: - 오토레이아웃

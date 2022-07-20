@@ -33,7 +33,7 @@ final class MainViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .grouped)
     
     // MARK: - 네비게이션 바 버튼
-    private lazy var regionSelectButton: RegionSelectButton = {
+    private lazy var navRegionSelectButton: RegionSelectButton = {
         let button = RegionSelectButton()
         button.setTitle("지역 선택 ", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 20, weight: .semibold)
@@ -45,23 +45,23 @@ final class MainViewController: UIViewController {
         return button
     }()
     
-    private lazy var heartButton: UIButton = {
+    private lazy var navHeartButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "heart"), for: .normal)
-        button.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(navHeartButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    private lazy var filterButton: UIButton = {
+    private lazy var navFilterButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
-        button.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(navFilterButtonTapped), for: .touchUpInside)
         return button
     }()
     
     // MARK: - 지역 선택 컨텍스트 메뉴
     private lazy var no = UIAction(title: "선택 안함") { [self] action in
-        self.regionSelectButton.setTitle("지역 선택 ", for: .normal)
+        self.navRegionSelectButton.setTitle("지역 선택 ", for: .normal)
         
         networkManager.fetchAnimal { result in
             switch result {
@@ -77,7 +77,7 @@ final class MainViewController: UIViewController {
     }
     
     private lazy var seoul = UIAction(title: "서울특별시") { [self] action in
-        self.regionSelectButton.setTitle("서울특별시 ", for: .normal)
+        self.navRegionSelectButton.setTitle("서울특별시 ", for: .normal)
         
         networkManager.fetchAnimal(regionQuery: Region.seoul.query) { result in
             switch result {
@@ -93,7 +93,7 @@ final class MainViewController: UIViewController {
     }
     
     private lazy var gyeonggi = UIAction(title: "경기도") { [self] action in
-        self.regionSelectButton.setTitle("경기도 ", for: .normal)
+        self.navRegionSelectButton.setTitle("경기도 ", for: .normal)
         
         networkManager.fetchAnimal(regionQuery: Region.gyeonggi.query) { result in
             switch result {
@@ -142,22 +142,22 @@ final class MainViewController: UIViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         
         // 버튼 추가
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: regionSelectButton)
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: filterButton), UIBarButtonItem(customView: heartButton)]
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navRegionSelectButton)
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: navFilterButton), UIBarButtonItem(customView: navHeartButton)]
     }
     
     // 바 아이템 오토레이아웃 - 지역 선택 글자 길어지면 짤리는거 없애기 위해
     private func setNavigationBarItemConstraints() {
-        regionSelectButton.translatesAutoresizingMaskIntoConstraints = false
+        navRegionSelectButton.translatesAutoresizingMaskIntoConstraints = false
     }
     
     // 바 버튼 함수
-    @objc private func heartButtonTapped() {
+    @objc private func navHeartButtonTapped() {
         let likeListVC = LikeListViewController()
         navigationController?.pushViewController(likeListVC, animated: true)
     }
     
-    @objc private func filterButtonTapped() {
+    @objc private func navFilterButtonTapped() {
         networkManager.fetchAnimal { result in
             switch result {
             case .success(let animalDatas):
@@ -233,6 +233,8 @@ extension MainViewController: UITableViewDataSource {
         // 힙에 올라간 셀 사용
         let cell = tableView.dequeueReusableCell(withIdentifier: "AnimalCell", for: indexPath) as! AnimalCell
         
+        cell.delegate = self
+        
         // 셀에 데이터 전달
         cell.imageUrl = animals[indexPath.row].detailImage
         cell.animal = animals[indexPath.row]
@@ -300,4 +302,13 @@ extension MainViewController: FilterDelegate {
         tableView.reloadData()
     }
     
+}
+
+extension MainViewController: ButtonDelegate {
+
+    func buttonTapped() {
+        print("main: button tapped")
+        
+    }
+
 }
