@@ -5,17 +5,18 @@
 //  Created by 정호윤 on 2022/07/11.
 //
 
+// TODO: 네비게이션 바 버튼 아이템 크기 키우기 / 셀 하트 버튼 크기 키우기 >> 버튼 크기 조절하는 법?? 이상하게 커짐;
+
 // 0. 필터
-// TODO: 개 고양이 두번 리퀘스트 하는 방법?
 // TODO: 메인에서 필터에 대한 정보를 알아야 함 > 속성 하나 만들어서 저장하고 필터에 넘겨주고 그걸 받아서 다시 패치?
-// TODO: 필터 해주는 속성 만들어서
-// TODO: 필터 다듬기(선택한 지역이 저장된 채로 필터가 돼야함) >> 지금 처럼 하면 메모리 사용량이 너무 올라가는데 어떡하지 뭐가 문제인지 모르겠음;;(클로저 때문인것 같긴함)
+// TODO: 필터 다듬기(선택한 지역이 저장된 채로 필터가 돼야함) >> **지금 처럼 하면 메모리 사용량이 너무 올라가는데 어떡하지 뭐가 문제인지 모르겠음;;(클로저 때문인것 같긴함)
 
 // 1.
 // TODO: api 공고일로 검색 안되는데 어떡하지 >> 받아온 데이터를 sort?
 
 // 2.
-// TODO: 무한 스크롤 구현(https://velog.io/@yoonah-dev/Infinite-Scroll)
+// TODO: 무한 스크롤 구현(https://velog.io/@yoonah-dev/Infinite-Scroll) > *왜 맨처음에 tableview bound가 작을까? >> 적은게 contentsize 엿나 bounds 엿나? 기억이 안나네;
+// >> 컨텐츠가 생기지가 않아서 맨 처음에 실행됨!!!
 // TODO: fetch 기다릴때(맨 처음, 스크롤) 프로그레스 뷰 / 필터한 값 없으면 없다고 알려주기
 
 import UIKit
@@ -23,15 +24,39 @@ import UIKit
 final class MainViewController: UIViewController {
     
     // MARK: - 네트워크 매니저
+    
     private var networkManager = NetworkManager.shared
+    private var regionQuery = Region.none.query
+    private var pageNumberQuery = 1
+    private var fetchMore = false
     
     // MARK: - 유기동물 데이터 배열
+    
     private var animals: [Item] = []
     
     // MARK: -  테이블 뷰 생성
+    
     private let tableView = UITableView(frame: .zero, style: .grouped)
     
     // MARK: - 네비게이션 바 버튼
+    
+    // 지역 선택 컨텍스트 메뉴
+    private lazy var regionMenu: UIMenu = {
+        var actions: [UIAction] = []
+        let region = Region.allCases
+        
+        region.forEach { actions.append(UIAction(title: $0.name) { action in
+            self.navRegionSelectButton.setTitle(action.title, for: .normal)
+            self.makeRegionQuery(action.title)
+            self.setDatas(by: self.regionQuery)
+        })
+        }
+        
+        let menu = UIMenu(children: actions)
+        return menu
+    }()
+    
+    // 지역 선택 버튼
     private lazy var navRegionSelectButton: RegionSelectButton = {
         let button = RegionSelectButton()
         button.setTitle("지역 선택 ", for: .normal)
@@ -39,11 +64,12 @@ final class MainViewController: UIViewController {
         button.setTitleColor(.black, for: .normal)
         button.setImage(UIImage(systemName: "chevron.down"), for: .normal)
         
-        button.menu = UIMenu(children: [no, seoul, gyeonggi])
+        button.menu = regionMenu
         button.showsMenuAsPrimaryAction = true
         return button
     }()
     
+    // 하트 버튼
     private lazy var navHeartButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "heart"), for: .normal)
@@ -51,6 +77,7 @@ final class MainViewController: UIViewController {
         return button
     }()
     
+    // 필터 버튼
     private lazy var navFilterButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
@@ -58,56 +85,8 @@ final class MainViewController: UIViewController {
         return button
     }()
     
-    // MARK: - 지역 선택 컨텍스트 메뉴
-    private lazy var no = UIAction(title: "선택 안함") { [self] action in
-        self.navRegionSelectButton.setTitle("지역 선택 ", for: .normal)
-        
-        networkManager.fetchAnimal { result in
-            switch result {
-            case .success(let animalDatas):
-                self.animals = animalDatas
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
-    private lazy var seoul = UIAction(title: "서울특별시") { [self] action in
-        self.navRegionSelectButton.setTitle("서울특별시 ", for: .normal)
-        
-        networkManager.fetchAnimal(regionQuery: Region.seoul.query) { result in
-            switch result {
-            case .success(let animalDatas):
-                self.animals = animalDatas
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
-    private lazy var gyeonggi = UIAction(title: "경기도") { [self] action in
-        self.navRegionSelectButton.setTitle("경기도 ", for: .normal)
-        
-        networkManager.fetchAnimal(regionQuery: Region.gyeonggi.query) { result in
-            switch result {
-            case .success(let animalDatas):
-                self.animals = animalDatas
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
     // MARK: - viewDidLoad
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -121,13 +100,15 @@ final class MainViewController: UIViewController {
         setDatas()
     }
     
-    // MARK: - (임시) viewWillAppear
+    // MARK: - (임시) viewWillAppear로 네비게이션 ui 다시 세팅
+    
     override func viewWillAppear(_ animated: Bool) {
         setNavBar()
     }
     
     
     // MARK: - 네비게이션 바
+    
     private func setNavBar() {
         // 다음화면 뒤로가기 버튼 레이블 삭제
         navigationItem.backButtonTitle = ""
@@ -156,6 +137,8 @@ final class MainViewController: UIViewController {
         navigationController?.pushViewController(likeListVC, animated: true)
     }
     
+    // 필터 버튼 함수
+    // TODO: 수정 필요(지역 정보 저장할 수 있게)
     @objc private func navFilterButtonTapped() {
         networkManager.fetchAnimal { result in
             switch result {
@@ -175,7 +158,8 @@ final class MainViewController: UIViewController {
         present(filterVC, animated: true)
     }
     
-    // MARK: - 테이블 뷰
+    // MARK: - 테이블 뷰 세팅
+    
     private func setTableView() {
         // seperator inset 설정
         tableView.separatorInset = UIEdgeInsets.zero
@@ -203,7 +187,9 @@ final class MainViewController: UIViewController {
         ])
     }
     
-    // MARK: - 데이터 세팅
+    // MARK: - fetch 함수들
+    
+    // 초기 세팅
     private func setDatas() {
         networkManager.fetchAnimal { result in
             switch result {
@@ -219,9 +205,83 @@ final class MainViewController: UIViewController {
         }
     }
     
+    // 지역에 맞는 데이터
+    private func setDatas(by region: String) {
+        networkManager.fetchAnimal(regionQuery: region) { result in
+            switch result {
+            case .success(let animalDatas):
+                self.animals = animalDatas
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    // 무한 스크롤용
+    private func appendDatas() {
+        networkManager.fetchAnimal(regionQuery: regionQuery, pageNumberQuery: pageNumberQuery) { result in
+            self.pageNumberQuery += 1
+            print(self.pageNumberQuery)
+            switch result {
+            case .success(let animalDatas):
+                self.animals.append(contentsOf: animalDatas)
+                self.fetchMore = false
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    // MARK: - 지역 문자열로 regionQuery에 할당
+    
+    private func makeRegionQuery(_ string: String) {
+        if string == "전국" {
+            regionQuery = Region.none.query
+        } else if string == "서울특별시" {
+            regionQuery = Region.seoul.query
+        } else if string == "부산광역시" {
+            regionQuery = Region.busan.query
+        } else if string == "대구광역시" {
+            regionQuery = Region.daegu.query
+        }  else if string == "인천광역시" {
+            regionQuery = Region.incheon.query
+        } else if string == "광주광역시" {
+            regionQuery = Region.gwangju.query
+        } else if string == "대전광역시" {
+            regionQuery = Region.daejeon.query
+        } else if string == "울산광역시" {
+            regionQuery = Region.ulsan.query
+        } else if string == "경기도" {
+            regionQuery = Region.gyeonggi.query
+        } else if string == "강원도" {
+            regionQuery = Region.gangwon.query
+        } else if string == "충청북도" {
+            regionQuery = Region.choongbook.query
+        } else if string == "충청남도" {
+            regionQuery = Region.choongnam.query
+        } else if string == "전라북도" {
+            regionQuery = Region.jeonbook.query
+        } else if string == "전라남도" {
+            regionQuery = Region.jeonnam.query
+        } else if string == "경상북도" {
+            regionQuery = Region.gyeongbook.query
+        } else if string == "경상남도" {
+            regionQuery = Region.gyeongnam.query
+        } else if string == "제주특별자치도" {
+            regionQuery = Region.jeju.query
+        }
+    }
+    
 }
 
 // MARK: - UITableViewDataSource
+
 extension MainViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -246,9 +306,10 @@ extension MainViewController: UITableViewDataSource {
 }
 
 // MARK: - UITableViewDelegate
+
 extension MainViewController: UITableViewDelegate {
     
-    // 셀의 높이 유동적으로 조절
+    // 셀 높이 유동적으로 조절
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 172
     }
@@ -272,30 +333,46 @@ extension MainViewController: UITableViewDelegate {
     
 }
 
+// MARK: - 무한 스크롤
+
+extension MainViewController {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if self.tableView.contentOffset.y >= self.tableView.contentSize.height - self.tableView.bounds.height {
+            if !fetchMore {
+                fetchMore = true
+                appendDatas()
+            }
+        }
+    }
+    
+}
+
 // MARK: - FilterDelegate
+
 extension MainViewController: FilterDelegate {
     
     func applyFilter(by filter: [String]) {
         print("main: \(filter)")
         
-//        print(spices)
+        //        print(spices)
         let filtered = animals
             .filter { filter.contains(String($0.kind?.split(separator: "]").first?.split(separator: "[").last ?? "")) }
         animals = filtered
         
-//        if filter.count == 0 {
-//            return
-//        } else if filter.count == 1 {
-//            let filteredAnimals = animals.filter { $0.kind?.contains(filter[0]) ?? false }
-//            animals = filteredAnimals
-//        } else if filter.count == 2 {
-//            let firstFilteredAnimals = animals.filter { $0.kind?.contains(filter[0]) ?? false }
-//            let secondFilteredAnimals = animals.filter { $0.kind?.contains(filter[1]) ?? false }
-//            animals = firstFilteredAnimals
-//            animals.append(contentsOf: secondFilteredAnimals)
-//        } else if filter.count == 3 {
-//            return
-//        }
+        //        if filter.count == 0 {
+        //            return
+        //        } else if filter.count == 1 {
+        //            let filteredAnimals = animals.filter { $0.kind?.contains(filter[0]) ?? false }
+        //            animals = filteredAnimals
+        //        } else if filter.count == 2 {
+        //            let firstFilteredAnimals = animals.filter { $0.kind?.contains(filter[0]) ?? false }
+        //            let secondFilteredAnimals = animals.filter { $0.kind?.contains(filter[1]) ?? false }
+        //            animals = firstFilteredAnimals
+        //            animals.append(contentsOf: secondFilteredAnimals)
+        //        } else if filter.count == 3 {
+        //            return
+        //        }
         
         print("main: \(animals)")
         tableView.reloadData()
@@ -304,11 +381,12 @@ extension MainViewController: FilterDelegate {
 }
 
 // MARK: - ButtonDelegate
-extension MainViewController: ButtonDelegate {
 
+extension MainViewController: ButtonDelegate {
+    
     func buttonTapped() {
         print("main: button tapped")
         
     }
-
+    
 }
