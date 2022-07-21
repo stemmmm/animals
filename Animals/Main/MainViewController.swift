@@ -8,7 +8,6 @@
 // TODO: 네비게이션 바 컨텍스트 메뉴 리팩토링
 
 // 0. 필터
-// TODO: 개 고양이 두번 리퀘스트 하는 방법?
 // TODO: 메인에서 필터에 대한 정보를 알아야 함 > 속성 하나 만들어서 저장하고 필터에 넘겨주고 그걸 받아서 다시 패치?
 // TODO: 필터 해주는 속성 만들어서
 // TODO: 필터 다듬기(선택한 지역이 저장된 채로 필터가 돼야함) >> **지금 처럼 하면 메모리 사용량이 너무 올라가는데 어떡하지 뭐가 문제인지 모르겠음;;(클로저 때문인것 같긴함)
@@ -17,7 +16,7 @@
 // TODO: api 공고일로 검색 안되는데 어떡하지 >> 받아온 데이터를 sort?
 
 // 2.
-// TODO: 무한 스크롤 구현(https://velog.io/@yoonah-dev/Infinite-Scroll) > *왜 맨처음에 tableview bound가 작을까?
+// TODO: 무한 스크롤 구현(https://velog.io/@yoonah-dev/Infinite-Scroll) > *왜 맨처음에 tableview bound가 작을까? >> 적은게 contentsize 엿나 bounds 엿나? 기억이 안나네;
 // TODO: fetch 기다릴때(맨 처음, 스크롤) 프로그레스 뷰 / 필터한 값 없으면 없다고 알려주기
 
 import UIKit
@@ -25,18 +24,22 @@ import UIKit
 final class MainViewController: UIViewController {
     
     // MARK: - 네트워크 매니저
+    
     private var networkManager = NetworkManager.shared
     private var regionQuery = Region.none.query
     private var pageNumberQuery = 1
     private var fetchMore = false
     
     // MARK: - 유기동물 데이터 배열
+    
     private var animals: [Item] = []
     
-    // MARK: -  테이블 뷰 생성
+    // MARK: -  테이블 뷰
+    
     private let tableView = UITableView(frame: .zero, style: .grouped)
     
     // MARK: - 네비게이션 바 버튼
+    
     // 지역 선택 컨텍스트 메뉴
     private lazy var regionMenu: UIMenu = {
         var actions: [UIAction] = []
@@ -81,6 +84,7 @@ final class MainViewController: UIViewController {
     }()
     
     // MARK: - viewDidLoad
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -95,12 +99,14 @@ final class MainViewController: UIViewController {
     }
     
     // MARK: - (임시) viewWillAppear로 네비게이션 ui 다시 세팅
+    
     override func viewWillAppear(_ animated: Bool) {
         setNavBar()
     }
     
     
     // MARK: - 네비게이션 바
+    
     private func setNavBar() {
         // 다음화면 뒤로가기 버튼 레이블 삭제
         navigationItem.backButtonTitle = ""
@@ -148,7 +154,8 @@ final class MainViewController: UIViewController {
         present(filterVC, animated: true)
     }
     
-    // MARK: - 테이블 뷰
+    // MARK: - 테이블 뷰 세팅
+    
     private func setTableView() {
         // seperator inset 설정
         tableView.separatorInset = UIEdgeInsets.zero
@@ -227,7 +234,8 @@ final class MainViewController: UIViewController {
         }
     }
     
-    // 지역 문자열로 regionQuery에 할당
+    // MARK: - 지역 문자열로 regionQuery에 할당
+    
     private func makeRegionQuery(_ string: String) {
         if string == "전국" {
             regionQuery = Region.none.query
@@ -269,6 +277,7 @@ final class MainViewController: UIViewController {
 }
 
 // MARK: - UITableViewDataSource
+
 extension MainViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -293,6 +302,7 @@ extension MainViewController: UITableViewDataSource {
 }
 
 // MARK: - UITableViewDelegate
+
 extension MainViewController: UITableViewDelegate {
     
     // 셀의 높이 유동적으로 조절
@@ -320,6 +330,7 @@ extension MainViewController: UITableViewDelegate {
 }
 
 // MARK: - 무한 스크롤
+
 extension MainViewController {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -334,6 +345,7 @@ extension MainViewController {
 }
 
 // MARK: - FilterDelegate
+
 extension MainViewController: FilterDelegate {
     
     func applyFilter(by filter: [String]) {
@@ -365,6 +377,7 @@ extension MainViewController: FilterDelegate {
 }
 
 // MARK: - ButtonDelegate
+
 extension MainViewController: ButtonDelegate {
     
     func buttonTapped() {
