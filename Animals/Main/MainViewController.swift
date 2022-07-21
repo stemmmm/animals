@@ -5,7 +5,7 @@
 //  Created by 정호윤 on 2022/07/11.
 //
 
-// TODO: 네비게이션 바 컨텍스트 메뉴 정리
+// TODO: 네비게이션 바 컨텍스트 메뉴 리팩토링
 
 // 0. 필터
 // TODO: 개 고양이 두번 리퀘스트 하는 방법?
@@ -26,6 +26,7 @@ final class MainViewController: UIViewController {
     
     // MARK: - 네트워크 매니저
     private var networkManager = NetworkManager.shared
+    private var regionQuery = Region.none.query
     private var pageNumberQuery = 1
     private var fetchMore = false
     
@@ -65,50 +66,20 @@ final class MainViewController: UIViewController {
     // MARK: - 지역 선택 컨텍스트 메뉴
     private lazy var no = UIAction(title: "선택 안함") { [self] action in
         self.navRegionSelectButton.setTitle("지역 선택 ", for: .normal)
-        
-        networkManager.fetchAnimal { result in
-            switch result {
-            case .success(let animalDatas):
-                self.animals = animalDatas
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
+        regionQuery = Region.none.query
+        setDatas(by: regionQuery)
     }
     
     private lazy var seoul = UIAction(title: "서울특별시") { [self] action in
         self.navRegionSelectButton.setTitle("서울특별시 ", for: .normal)
-        
-        networkManager.fetchAnimal(regionQuery: Region.seoul.query) { result in
-            switch result {
-            case .success(let animalDatas):
-                self.animals = animalDatas
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
+        regionQuery = Region.seoul.query
+        setDatas(by: regionQuery)
     }
     
     private lazy var gyeonggi = UIAction(title: "경기도") { [self] action in
         self.navRegionSelectButton.setTitle("경기도 ", for: .normal)
-        
-        networkManager.fetchAnimal(regionQuery: Region.gyeonggi.query) { result in
-            switch result {
-            case .success(let animalDatas):
-                self.animals = animalDatas
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
+        regionQuery = Region.gyeonggi.query
+        setDatas(by: regionQuery)
     }
     
     // MARK: - viewDidLoad
@@ -207,13 +178,47 @@ final class MainViewController: UIViewController {
         ])
     }
     
-    // MARK: - 데이터 세팅
+    // MARK: - fetch 함수들
+    // 초기 세팅
     private func setDatas() {
         networkManager.fetchAnimal { result in
             switch result {
             case .success(let animalDatas):
                 self.animals = animalDatas
                 // 데이터 받아온 후 메인 쓰레드에서 테이블 뷰 리로드
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    // 지역에 맞는 데이터
+    private func setDatas(by region: String) {
+        networkManager.fetchAnimal(regionQuery: region) { result in
+            switch result {
+            case .success(let animalDatas):
+                self.animals = animalDatas
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    // 무한 스크롤용
+    private func appendDatas() {
+        networkManager.fetchAnimal(regionQuery: regionQuery, pageNumberQuery: pageNumberQuery) { result in
+            self.pageNumberQuery += 1
+            print(self.pageNumberQuery)
+            switch result {
+            case .success(let animalDatas):
+                self.animals.append(contentsOf: animalDatas)
+                self.fetchMore = false
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
@@ -283,21 +288,7 @@ extension MainViewController {
         if self.tableView.contentOffset.y >= self.tableView.contentSize.height - self.tableView.bounds.height {
             if !fetchMore {
                 fetchMore = true
-                
-                networkManager.fetchAnimal(pageNumberQuery: pageNumberQuery) { result in
-                    self.pageNumberQuery += 1
-                    
-                    switch result {
-                    case .success(let animalDatas):
-                        self.animals.append(contentsOf: animalDatas)
-                        self.fetchMore = false
-                        DispatchQueue.main.async {
-                            self.tableView.reloadData()
-                        }
-                    case .failure(let error):
-                        print(error)
-                    }
-                }
+                appendDatas()
             }
         }
     }
