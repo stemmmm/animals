@@ -5,11 +5,10 @@
 //  Created by 정호윤 on 2022/07/11.
 //
 
-// TODO: 네비게이션 바 컨텍스트 메뉴 리팩토링
+// TODO: 네비게이션 바 버튼 아이템 크기 키우기 / 셀 하트 버튼 크기 키우기 >> 버튼 크기 조절하는 법?? 이상하게 커짐;
 
 // 0. 필터
 // TODO: 메인에서 필터에 대한 정보를 알아야 함 > 속성 하나 만들어서 저장하고 필터에 넘겨주고 그걸 받아서 다시 패치?
-// TODO: 필터 해주는 속성 만들어서
 // TODO: 필터 다듬기(선택한 지역이 저장된 채로 필터가 돼야함) >> **지금 처럼 하면 메모리 사용량이 너무 올라가는데 어떡하지 뭐가 문제인지 모르겠음;;(클로저 때문인것 같긴함)
 
 // 1.
@@ -17,6 +16,7 @@
 
 // 2.
 // TODO: 무한 스크롤 구현(https://velog.io/@yoonah-dev/Infinite-Scroll) > *왜 맨처음에 tableview bound가 작을까? >> 적은게 contentsize 엿나 bounds 엿나? 기억이 안나네;
+// >> 컨텐츠가 생기지가 않아서 맨 처음에 실행됨!!!
 // TODO: fetch 기다릴때(맨 처음, 스크롤) 프로그레스 뷰 / 필터한 값 없으면 없다고 알려주기
 
 import UIKit
@@ -34,7 +34,7 @@ final class MainViewController: UIViewController {
     
     private var animals: [Item] = []
     
-    // MARK: -  테이블 뷰
+    // MARK: -  테이블 뷰 생성
     
     private let tableView = UITableView(frame: .zero, style: .grouped)
     
@@ -44,12 +44,14 @@ final class MainViewController: UIViewController {
     private lazy var regionMenu: UIMenu = {
         var actions: [UIAction] = []
         let region = Region.allCases
+        
         region.forEach { actions.append(UIAction(title: $0.name) { action in
             self.navRegionSelectButton.setTitle(action.title, for: .normal)
             self.makeRegionQuery(action.title)
             self.setDatas(by: self.regionQuery)
         })
         }
+        
         let menu = UIMenu(children: actions)
         return menu
     }()
@@ -135,6 +137,8 @@ final class MainViewController: UIViewController {
         navigationController?.pushViewController(likeListVC, animated: true)
     }
     
+    // 필터 버튼 함수
+    // TODO: 수정 필요(지역 정보 저장할 수 있게)
     @objc private func navFilterButtonTapped() {
         networkManager.fetchAnimal { result in
             switch result {
@@ -305,7 +309,7 @@ extension MainViewController: UITableViewDataSource {
 
 extension MainViewController: UITableViewDelegate {
     
-    // 셀의 높이 유동적으로 조절
+    // 셀 높이 유동적으로 조절
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 172
     }
