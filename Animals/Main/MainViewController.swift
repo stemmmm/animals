@@ -11,13 +11,13 @@
 // TODO: 개 고양이 두번 리퀘스트 하는 방법?
 // TODO: 메인에서 필터에 대한 정보를 알아야 함 > 속성 하나 만들어서 저장하고 필터에 넘겨주고 그걸 받아서 다시 패치?
 // TODO: 필터 해주는 속성 만들어서
-// TODO: 필터 다듬기(선택한 지역이 저장된 채로 필터가 돼야함) >> 지금 처럼 하면 메모리 사용량이 너무 올라가는데 어떡하지 뭐가 문제인지 모르겠음;;(클로저 때문인것 같긴함)
+// TODO: 필터 다듬기(선택한 지역이 저장된 채로 필터가 돼야함) >> **지금 처럼 하면 메모리 사용량이 너무 올라가는데 어떡하지 뭐가 문제인지 모르겠음;;(클로저 때문인것 같긴함)
 
 // 1.
 // TODO: api 공고일로 검색 안되는데 어떡하지 >> 받아온 데이터를 sort?
 
 // 2.
-// TODO: 무한 스크롤 구현(https://velog.io/@yoonah-dev/Infinite-Scroll) > 왜 맨처음에 tableview bound가 작을까?
+// TODO: 무한 스크롤 구현(https://velog.io/@yoonah-dev/Infinite-Scroll) > *왜 맨처음에 tableview bound가 작을까?
 // TODO: fetch 기다릴때(맨 처음, 스크롤) 프로그레스 뷰 / 필터한 값 없으면 없다고 알려주기
 
 import UIKit
@@ -37,6 +37,21 @@ final class MainViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .grouped)
     
     // MARK: - 네비게이션 바 버튼
+    // 지역 선택 컨텍스트 메뉴
+    private lazy var regionMenu: UIMenu = {
+        var actions: [UIAction] = []
+        let region = Region.allCases
+        region.forEach { actions.append(UIAction(title: $0.name) { action in
+            self.navRegionSelectButton.setTitle(action.title, for: .normal)
+            self.makeRegionQuery(action.title)
+            self.setDatas(by: self.regionQuery)
+        })
+        }
+        let menu = UIMenu(children: actions)
+        return menu
+    }()
+    
+    // 지역 선택 버튼
     private lazy var navRegionSelectButton: RegionSelectButton = {
         let button = RegionSelectButton()
         button.setTitle("지역 선택 ", for: .normal)
@@ -44,11 +59,12 @@ final class MainViewController: UIViewController {
         button.setTitleColor(.black, for: .normal)
         button.setImage(UIImage(systemName: "chevron.down"), for: .normal)
         
-        button.menu = UIMenu(children: [no, seoul, gyeonggi])
+        button.menu = regionMenu
         button.showsMenuAsPrimaryAction = true
         return button
     }()
     
+    // 하트 버튼
     private lazy var navHeartButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "heart"), for: .normal)
@@ -56,31 +72,13 @@ final class MainViewController: UIViewController {
         return button
     }()
     
+    // 필터 버튼
     private lazy var navFilterButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
         button.addTarget(self, action: #selector(navFilterButtonTapped), for: .touchUpInside)
         return button
     }()
-    
-    // MARK: - 지역 선택 컨텍스트 메뉴
-    private lazy var no = UIAction(title: "선택 안함") { [self] action in
-        self.navRegionSelectButton.setTitle("지역 선택 ", for: .normal)
-        regionQuery = Region.none.query
-        setDatas(by: regionQuery)
-    }
-    
-    private lazy var seoul = UIAction(title: "서울특별시") { [self] action in
-        self.navRegionSelectButton.setTitle("서울특별시 ", for: .normal)
-        regionQuery = Region.seoul.query
-        setDatas(by: regionQuery)
-    }
-    
-    private lazy var gyeonggi = UIAction(title: "경기도") { [self] action in
-        self.navRegionSelectButton.setTitle("경기도 ", for: .normal)
-        regionQuery = Region.gyeonggi.query
-        setDatas(by: regionQuery)
-    }
     
     // MARK: - viewDidLoad
     override func viewDidLoad() {
@@ -96,7 +94,7 @@ final class MainViewController: UIViewController {
         setDatas()
     }
     
-    // MARK: - (임시) viewWillAppear
+    // MARK: - (임시) viewWillAppear로 네비게이션 ui 다시 세팅
     override func viewWillAppear(_ animated: Bool) {
         setNavBar()
     }
@@ -179,6 +177,7 @@ final class MainViewController: UIViewController {
     }
     
     // MARK: - fetch 함수들
+    
     // 초기 세팅
     private func setDatas() {
         networkManager.fetchAnimal { result in
@@ -225,6 +224,45 @@ final class MainViewController: UIViewController {
             case .failure(let error):
                 print(error)
             }
+        }
+    }
+    
+    // 지역 문자열로 regionQuery에 할당
+    private func makeRegionQuery(_ string: String) {
+        if string == "전국" {
+            regionQuery = Region.none.query
+        } else if string == "서울특별시" {
+            regionQuery = Region.seoul.query
+        } else if string == "부산광역시" {
+            regionQuery = Region.busan.query
+        } else if string == "대구광역시" {
+            regionQuery = Region.daegu.query
+        }  else if string == "인천광역시" {
+            regionQuery = Region.incheon.query
+        } else if string == "광주광역시" {
+            regionQuery = Region.gwangju.query
+        } else if string == "대전광역시" {
+            regionQuery = Region.daejeon.query
+        } else if string == "울산광역시" {
+            regionQuery = Region.ulsan.query
+        } else if string == "경기도" {
+            regionQuery = Region.gyeonggi.query
+        } else if string == "강원도" {
+            regionQuery = Region.gangwon.query
+        } else if string == "충청북도" {
+            regionQuery = Region.choongbook.query
+        } else if string == "충청남도" {
+            regionQuery = Region.choongnam.query
+        } else if string == "전라북도" {
+            regionQuery = Region.jeonbook.query
+        } else if string == "전라남도" {
+            regionQuery = Region.jeonnam.query
+        } else if string == "경상북도" {
+            regionQuery = Region.gyeongbook.query
+        } else if string == "경상남도" {
+            regionQuery = Region.gyeongnam.query
+        } else if string == "제주특별자치도" {
+            regionQuery = Region.jeju.query
         }
     }
     

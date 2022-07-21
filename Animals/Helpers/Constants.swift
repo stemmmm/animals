@@ -17,7 +17,7 @@ struct AnimalApi {
     static let numberOfRowsQuery = "numOfRows=20"
 }
 
-enum Region {
+enum Region: CaseIterable {
     
     case none
     case seoul
