@@ -35,6 +35,8 @@ final class AnimalCell: UITableViewCell {
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 14
         imageView.contentMode = .scaleAspectFill
+        imageView.image = UIImage(systemName: "pawprint")
+        imageView.tintColor = .systemGray
         return imageView
     }()
     
@@ -103,7 +105,7 @@ final class AnimalCell: UITableViewCell {
         super.prepareForReuse()
         
         // 이미지 바뀌는것처럼 보이는 현상 해결
-        thumbnailImageView.image = nil
+        thumbnailImageView.image = UIImage(systemName: "pawprint")
     }
     
     // MARK: - 뷰 세팅
@@ -156,8 +158,8 @@ final class AnimalCell: UITableViewCell {
         heartButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            heartButton.widthAnchor.constraint(equalToConstant: 20),
-            heartButton.heightAnchor.constraint(equalToConstant: 20),
+            heartButton.widthAnchor.constraint(equalToConstant: 27),
+            heartButton.heightAnchor.constraint(equalToConstant: 25),
             heartButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20),
             heartButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16)
         ])

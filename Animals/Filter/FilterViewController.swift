@@ -144,6 +144,7 @@ final class FilterViewController: UIViewController {
     }
     
     // MARK: - viewDidLoad
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -153,7 +154,8 @@ final class FilterViewController: UIViewController {
     }
     
     // MARK: - autolayouts
-    func setSuperStackConstraints() {
+    
+    private func setSuperStackConstraints() {
         view.addSubview(superStack)
         superStack.translatesAutoresizingMaskIntoConstraints = false
         
@@ -164,7 +166,7 @@ final class FilterViewController: UIViewController {
         ])
     }
     
-    func setbottomButtonStackViewConstraints() {
+    private func setbottomButtonStackViewConstraints() {
         view.addSubview(bottomButtonStackView)
         bottomButtonStackView.translatesAutoresizingMaskIntoConstraints = false
         

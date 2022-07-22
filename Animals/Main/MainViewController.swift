@@ -5,19 +5,14 @@
 //  Created by 정호윤 on 2022/07/11.
 //
 
-// TODO: 네비게이션 바 버튼 아이템 크기 키우기 / 셀 하트 버튼 크기 키우기 >> 버튼 크기 조절하는 법?? 이상하게 커짐;
-
 // 0. 필터
 // TODO: 메인에서 필터에 대한 정보를 알아야 함 > 속성 하나 만들어서 저장하고 필터에 넘겨주고 그걸 받아서 다시 패치?
-// TODO: 필터 다듬기(선택한 지역이 저장된 채로 필터가 돼야함) >> **지금 처럼 하면 메모리 사용량이 너무 올라가는데 어떡하지 뭐가 문제인지 모르겠음;;(클로저 때문인것 같긴함)
-
-// 1.
-// TODO: api 공고일로 검색 안되는데 어떡하지 >> 받아온 데이터를 sort?
+// TODO: 필터 다듬기(선택한 지역이 저장된 채로 필터가 돼야함)
+// TODO: 리프레시 기능!! 데이터 안받아와지거나 서버 이상할때
 
 // 2.
-// TODO: 무한 스크롤 구현(https://velog.io/@yoonah-dev/Infinite-Scroll) > *왜 맨처음에 tableview bound가 작을까? >> 적은게 contentsize 엿나 bounds 엿나? 기억이 안나네;
-// >> 컨텐츠가 생기지가 않아서 맨 처음에 실행됨!!!
-// TODO: fetch 기다릴때(맨 처음, 스크롤) 프로그레스 뷰 / 필터한 값 없으면 없다고 알려주기
+// TODO: fetch 기다릴때(맨 처음, 스크롤) 액티비티 인디케이터 or 플레이스 홀더
+// 필터한 값 없으면 없다고 알려주기 /// 지역 바꾸면 화면 맨위로 자동으로 보내주기
 
 import UIKit
 
@@ -59,7 +54,7 @@ final class MainViewController: UIViewController {
     // 지역 선택 버튼
     private lazy var navRegionSelectButton: RegionSelectButton = {
         let button = RegionSelectButton()
-        button.setTitle("지역 선택 ", for: .normal)
+        button.setTitle("전국 ", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 20, weight: .semibold)
         button.setTitleColor(.black, for: .normal)
         button.setImage(UIImage(systemName: "chevron.down"), for: .normal)
@@ -97,6 +92,8 @@ final class MainViewController: UIViewController {
         setTableView()
         setTableViewConstraints()
         
+//        setIndicator()
+        
         setDatas()
     }
     
@@ -107,7 +104,7 @@ final class MainViewController: UIViewController {
     }
     
     
-    // MARK: - 네비게이션 바
+    // MARK: - 네비게이션 바 세팅
     
     private func setNavBar() {
         // 다음화면 뒤로가기 버튼 레이블 삭제
@@ -224,7 +221,6 @@ final class MainViewController: UIViewController {
     private func appendDatas() {
         networkManager.fetchAnimal(regionQuery: regionQuery, pageNumberQuery: pageNumberQuery) { result in
             self.pageNumberQuery += 1
-            print(self.pageNumberQuery)
             switch result {
             case .success(let animalDatas):
                 self.animals.append(contentsOf: animalDatas)

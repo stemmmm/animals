@@ -28,10 +28,10 @@ final class HeartButton: UIButton {
     // MARK: - setView
     private func setView() {
         if isOn == false {
-            self.setImage(UIImage(systemName: "heart"), for: .normal)
+            self.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
             self.tintColor = .gray
         } else {
-            self.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+            self.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
             self.tintColor = .red
         }
     }
