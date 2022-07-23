@@ -8,6 +8,7 @@
 // 0. 필터
 // TODO: 메인에서 필터에 대한 정보를 알아야 함 > 속성 하나 만들어서 저장하고 필터에 넘겨주고 그걸 받아서 다시 패치?
 // TODO: 필터 다듬기(선택한 지역이 저장된 채로 필터가 돼야함)
+// TODO: 필터 계속 적용되면 아무것도 안나옴 > 필터 제거 기능
 // TODO: 리프레시 기능!! 데이터 안받아와지거나 서버 이상할때
 
 // 2.
@@ -92,8 +93,6 @@ final class MainViewController: UIViewController {
         setTableView()
         setTableViewConstraints()
         
-//        setIndicator()
-        
         setDatas()
     }
     
@@ -128,30 +127,20 @@ final class MainViewController: UIViewController {
         navRegionSelectButton.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    // 바 버튼 함수
+    // MARK: - 관심 목록 버튼
+    
     @objc private func navHeartButtonTapped() {
         let likeListVC = LikeListViewController()
         navigationController?.pushViewController(likeListVC, animated: true)
     }
     
-    // 필터 버튼 함수
-    // TODO: 수정 필요(지역 정보 저장할 수 있게)
+    // MARK: - 필터 버튼
+    
     @objc private func navFilterButtonTapped() {
-        networkManager.fetchAnimal { result in
-            switch result {
-            case .success(let animalDatas):
-                self.animals = animalDatas
-                // 데이터 받아온 후 메인 쓰레드에서 테이블 뷰 리로드
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
-        
         let filterVC = FilterViewController()
         filterVC.delegate = self
+        
+        setDatas(by: regionQuery)
         present(filterVC, animated: true)
     }
     
@@ -348,13 +337,22 @@ extension MainViewController {
 
 extension MainViewController: FilterDelegate {
     
+    // TODO: fetch 함수 다시 만들기? <- 마지막 방법
+    
+    // TODO: 다른 델리게이트 함수로 필터된 목록 저장해서 필터 화면으로 다시 넘겨주기
+    // TODO: 필터 초기화 하고 적용하면 데이터 다시 로드
+    // TODO: 필터에 포함돼있으면 처음부터 색깔 초록색으로 표시
+    
+    // TODO: 무한 스크롤 할 때도 필터 적용된 정보들만 로드
+    
     func applyFilter(by filter: [String]) {
         print("main: \(filter)")
         
-        //        print(spices)
         let filtered = animals
             .filter { filter.contains(String($0.kind?.split(separator: "]").first?.split(separator: "[").last ?? "")) }
         animals = filtered
+        
+//        filteredAttributes = filter
         
         //        if filter.count == 0 {
         //            return
@@ -370,7 +368,7 @@ extension MainViewController: FilterDelegate {
         //            return
         //        }
         
-        print("main: \(animals)")
+//        print("main: \(animals)")
         tableView.reloadData()
     }
     

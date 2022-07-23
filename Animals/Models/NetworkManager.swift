@@ -72,7 +72,7 @@ final class NetworkManager {
         do {
             // JSON 데이터 -> AnimalData 구조체
             let animalData = try JSONDecoder().decode(Animal.self, from: animalData)
-            return animalData.response.body.items.item
+            return animalData.response.body.items.item.sorted(by: { $0.noticeLeftDays! < $1.noticeLeftDays! })
         } catch {
             print(error)
             return nil

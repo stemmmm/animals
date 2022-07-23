@@ -9,6 +9,12 @@ import UIKit
 
 final class FilterViewController: UIViewController {
     
+    var storedFilterAttributes: [String] = [] {
+        didSet {
+            // 이거랑 나중에 합치기 
+        }
+    }
+    
     private var filters: Set<String> = []
     
     weak var delegate: FilterDelegate?
