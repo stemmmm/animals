@@ -118,7 +118,7 @@ final class FilterViewController: UIViewController {
             case Tag.cat.rawValue:
                 filters.insert("고양이")
             case Tag.etc.rawValue:
-                filters.insert("기타")
+                filters.insert("기타축종")
             default:
                 filters.insert(sender.currentTitle ?? "")
             }
@@ -129,7 +129,7 @@ final class FilterViewController: UIViewController {
             case Tag.cat.rawValue:
                 filters.remove("고양이")
             case Tag.etc.rawValue:
-                filters.remove("기타")
+                filters.remove("기타축종")
             default:
                 filters.remove(sender.currentTitle ?? "")
             }

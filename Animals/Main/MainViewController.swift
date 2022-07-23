@@ -337,38 +337,14 @@ extension MainViewController {
 
 extension MainViewController: FilterDelegate {
     
-    // TODO: fetch 함수 다시 만들기? <- 마지막 방법
-    
-    // TODO: 다른 델리게이트 함수로 필터된 목록 저장해서 필터 화면으로 다시 넘겨주기
-    // TODO: 필터 초기화 하고 적용하면 데이터 다시 로드
     // TODO: 필터에 포함돼있으면 처음부터 색깔 초록색으로 표시
     
     // TODO: 무한 스크롤 할 때도 필터 적용된 정보들만 로드
     
     func applyFilter(by filter: [String]) {
-        print("main: \(filter)")
-        
-        let filtered = animals
-            .filter { filter.contains(String($0.kind?.split(separator: "]").first?.split(separator: "[").last ?? "")) }
-        animals = filtered
-        
-//        filteredAttributes = filter
-        
-        //        if filter.count == 0 {
-        //            return
-        //        } else if filter.count == 1 {
-        //            let filteredAnimals = animals.filter { $0.kind?.contains(filter[0]) ?? false }
-        //            animals = filteredAnimals
-        //        } else if filter.count == 2 {
-        //            let firstFilteredAnimals = animals.filter { $0.kind?.contains(filter[0]) ?? false }
-        //            let secondFilteredAnimals = animals.filter { $0.kind?.contains(filter[1]) ?? false }
-        //            animals = firstFilteredAnimals
-        //            animals.append(contentsOf: secondFilteredAnimals)
-        //        } else if filter.count == 3 {
-        //            return
-        //        }
-        
-//        print("main: \(animals)")
+        let filteredAnimals = animals.filter { filter.contains(String($0.kind?.split(separator: "]").first?.split(separator: "[").last ?? "")) }
+        animals = filteredAnimals
+
         tableView.reloadData()
     }
     
