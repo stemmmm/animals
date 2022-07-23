@@ -17,7 +17,7 @@ final class AnimalCell: UITableViewCell {
         didSet {
             durationDateLabel.text = "공고 종료 \(animal?.noticeLeftDays ?? 0)일 전"
             kindLabel.text = animal?.kind
-            informationLabel.text = animal?.age
+            informationLabel.text = "\(animal?.sex ?? "미상") · \(animal?.age ?? 0)세"
             shelterLabel.text = animal?.shelterName
         }
     }

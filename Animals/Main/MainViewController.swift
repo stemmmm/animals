@@ -338,7 +338,6 @@ extension MainViewController {
 extension MainViewController: FilterDelegate {
     
     // TODO: 필터에 포함돼있으면 처음부터 색깔 초록색으로 표시
-    
     // TODO: 무한 스크롤 할 때도 필터 적용된 정보들만 로드
     
     func applyFilter(by filter: [String]) {
