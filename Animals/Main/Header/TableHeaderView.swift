@@ -54,11 +54,11 @@ final class TableHeaderView: UIView {
         NSLayoutConstraint.activate([
             headerStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
             headerStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20),
-            headerStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 20),
+            headerStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20),
             headerStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16),
             
-            benefitButton.widthAnchor.constraint(equalToConstant: 350),
-            benefitButton.heightAnchor.constraint(equalToConstant: 66)
+            benefitButton.widthAnchor.constraint(equalTo: headerStackView.widthAnchor),
+            benefitButton.heightAnchor.constraint(equalToConstant: 66),
         ])
     }
     
