@@ -33,7 +33,6 @@ final class CollectionHeaderView: UICollectionReusableView {
         benefitButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            benefitButton.widthAnchor.constraint(equalToConstant: 350),
             benefitButton.heightAnchor.constraint(equalToConstant: 66),
             benefitButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
             benefitButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20),
