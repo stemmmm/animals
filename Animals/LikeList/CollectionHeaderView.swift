@@ -12,8 +12,9 @@ final class CollectionHeaderView: UICollectionReusableView {
     // MARK: - view
     private let benefitButton: BenefitButton = {
         let button = BenefitButton()
-        button.setTitle("🐶 공고 종료된 아이들은 자동으로 목록에서 사라져요", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
+        button.setTitle("🐶 공고 종료된 아이들은\n자동으로 목록에서 사라져요", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        button.titleLabel?.lineBreakMode = .byWordWrapping
         return button
     }()
     

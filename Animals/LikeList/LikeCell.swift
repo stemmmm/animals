@@ -12,7 +12,7 @@ final class LikeCell: UICollectionViewCell {
     // MARK: - 받아온 데이터 세팅
     var animal: Item? {
         didSet {
-            durationDateLabel.text = animal?.noticeStartDate
+            durationDateLabel.text = "공고 종료 \(animal?.noticeLeftDays ?? 0)일 전"
         }
     }
     
@@ -77,7 +77,6 @@ final class LikeCell: UICollectionViewCell {
             thumbnailImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             thumbnailImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
-            durationDateLabel.widthAnchor.constraint(equalToConstant: 110),
             durationDateLabel.heightAnchor.constraint(equalToConstant: 24),
             durationDateLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
             durationDateLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 27),

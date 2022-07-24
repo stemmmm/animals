@@ -15,7 +15,9 @@ final class ColumnFlowLayout: UICollectionViewFlowLayout {
         
         self.scrollDirection = .vertical
         
-        self.itemSize = CGSize(width: 165, height: 210)
+        let itemWidth = ((UIScreen.main.bounds.width - 20 - 40) * (2 - 1)) / 2
+        
+        self.itemSize = CGSize(width: itemWidth, height: itemWidth * 4 / 3)
         self.headerReferenceSize = CGSize(width: 390, height: 105)
 
         self.sectionInset = .init(top: 0, left: 20, bottom: 20, right: 20)
