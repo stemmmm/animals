@@ -52,6 +52,8 @@ struct Item: Codable {
     let shelterAddress: String?
     let telNumber: String?              // 담당자 연락처
     
+    var isLiked: Bool = false
+    
     // 응답 메시지 항목명 원하는 이름으로
     enum CodingKeys: String, CodingKey {
         case thumbnailImage = "filename"
