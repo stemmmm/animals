@@ -9,14 +9,20 @@ import UIKit
 
 final class FilterViewController: UIViewController {
     
-    private var filters: Set<String> = []
+    private var kind: String?
+    private var neutralizationStatus: String?
     
     weak var delegate: FilterDelegate?
     
-    enum Tag: Int {
+    enum Kind: Int {
         case dog = 1
         case cat
         case etc
+    }
+    
+    enum Neutralized: Int {
+        case yes = 1
+        case no
     }
     
     // MARK: - 품종
@@ -30,24 +36,24 @@ final class FilterViewController: UIViewController {
     private let dogButton: FilterCategoryButton = {
         let button = FilterCategoryButton()
         button.setTitle("🐶강아지", for: .normal)
-        button.tag = Tag.dog.rawValue
-        button.addTarget(self, action: #selector(categoryButtonTapped), for: .touchUpInside)
+        button.tag = Kind.dog.rawValue
+        button.addTarget(self, action: #selector(kindButtonTapped), for: .touchUpInside)
         return button
     }()
     
     private let catButton: FilterCategoryButton = {
         let button = FilterCategoryButton()
         button.setTitle("🐱고양이", for: .normal)
-        button.tag = Tag.cat.rawValue
-        button.addTarget(self, action: #selector(categoryButtonTapped), for: .touchUpInside)
+        button.tag = Kind.cat.rawValue
+        button.addTarget(self, action: #selector(kindButtonTapped), for: .touchUpInside)
         return button
     }()
     
     private let etcButton: FilterCategoryButton = {
         let button = FilterCategoryButton()
         button.setTitle("기타", for: .normal)
-        button.tag = Tag.etc.rawValue
-        button.addTarget(self, action: #selector(categoryButtonTapped), for: .touchUpInside)
+        button.tag = Kind.etc.rawValue
+        button.addTarget(self, action: #selector(kindButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -81,16 +87,16 @@ final class FilterViewController: UIViewController {
     private let yesButton: FilterCategoryButton = {
         let button = FilterCategoryButton()
         button.setTitle("예", for: .normal)
-        button.tag = Tag.dog.rawValue
-        button.addTarget(self, action: #selector(categoryButtonTapped), for: .touchUpInside)
+        button.tag = Neutralized.yes.rawValue
+        button.addTarget(self, action: #selector(neutralizedButtonTapped), for: .touchUpInside)
         return button
     }()
     
     private let noButton: FilterCategoryButton = {
         let button = FilterCategoryButton()
         button.setTitle("아니오", for: .normal)
-        button.tag = Tag.cat.rawValue
-        button.addTarget(self, action: #selector(categoryButtonTapped), for: .touchUpInside)
+        button.tag = Neutralized.no.rawValue
+        button.addTarget(self, action: #selector(neutralizedButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -162,44 +168,55 @@ final class FilterViewController: UIViewController {
     }()
     
     // MARK: - buttonSelected
-    @objc private func categoryButtonTapped(sender: FilterCategoryButton) {
+    
+    func deselectKindButtons() {
+        dogButton.isOn = false
+        catButton.isOn = false
+        etcButton.isOn = false
+    }
+    
+    func deselectNeutralizationButtons() {
+        yesButton.isOn = false
+        noButton.isOn = false
+    }
+    
+    @objc private func kindButtonTapped(sender: FilterCategoryButton) {
+        deselectKindButtons()
         sender.isOn.toggle()
         
         if sender.isOn == true {
-            switch sender.tag {
-            case Tag.dog.rawValue:
-                filters.insert("개")
-            case Tag.cat.rawValue:
-                filters.insert("고양이")
-            case Tag.etc.rawValue:
-                filters.insert("기타축종")
-            default:
-                filters.insert(sender.currentTitle ?? "")
+            switch sender.titleLabel?.text {
+            case "🐶강아지": kind = "417000"
+            case "🐱고양이": kind = "422400"
+            case "기타": kind = "429900"
+            default: kind = nil
             }
         } else {
-            switch sender.tag {
-            case Tag.dog.rawValue:
-                filters.remove("개")
-            case Tag.cat.rawValue:
-                filters.remove("고양이")
-            case Tag.etc.rawValue:
-                filters.remove("기타축종")
-            default:
-                filters.remove(sender.currentTitle ?? "")
-            }
+            kind = nil
         }
+        print(kind)
+    }
+    
+    @objc private func neutralizedButtonTapped(sender: FilterCategoryButton) {
+        deselectNeutralizationButtons()
+        sender.isOn.toggle()
         
-        print(filters)
+        switch sender.titleLabel?.text {
+        case "예": neutralizationStatus = "Y"
+        case "아니오": neutralizationStatus = "N"
+        default: neutralizationStatus = nil
+        }
+        print(neutralizationStatus)
     }
     
     @objc private func resetButtonTapped(sender: UIButton) {
-        [dogButton, catButton, etcButton].forEach { $0.isOn = false }
-        filters.removeAll()
+        [dogButton, catButton, etcButton, yesButton, noButton].forEach { $0.isOn = false }
+        kind = nil
+        neutralizationStatus = nil
     }
     
     @objc private func applyButtonTapped(sender: UIButton) {
-        let filtersArray = Array(filters)
-        delegate?.applyFilter(by: filtersArray)
+        delegate?.applyFilter(kind: kind ?? "", neutralizationStatus: neutralizationStatus ?? "")
         dismiss(animated: true)
     }
     

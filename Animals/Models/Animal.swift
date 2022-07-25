@@ -32,8 +32,6 @@ struct Items: Codable {
 // MARK: - 유기동물 데이터
 struct Item: Codable {
     
-    let thumbnailImage: String?         // 메인화면 이미지
-    
     let detailImage: String?            // 상세화면 이미지
     let noticeNumber: String?
     let noticeStartDate: String?
@@ -56,7 +54,6 @@ struct Item: Codable {
     
     // 응답 메시지 항목명 원하는 이름으로
     enum CodingKeys: String, CodingKey {
-        case thumbnailImage = "filename"
         case detailImage = "popfile"
         case noticeNumber = "noticeNo"
         case noticeStartDate = "noticeSdt"

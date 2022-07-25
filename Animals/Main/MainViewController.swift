@@ -220,6 +220,21 @@ final class MainViewController: UIViewController {
         }
     }
     
+    // 필터용
+    private func setDatasByFilter(kind: String, neutralizationStatus: String) {
+        networkManager.fetchAnimal(regionQuery: regionQuery, pageNumberQuery: pageNumberQuery, kindQuery: kind, neutralizationQuery: neutralizationStatus) { result in
+            switch result {
+            case .success(let animalDatas):
+                self.animals = animalDatas
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
     // MARK: - 지역 문자열로 regionQuery에 할당
     
     private func makeRegionQuery(_ string: String) {
@@ -334,11 +349,9 @@ extension MainViewController {
 
 extension MainViewController: FilterDelegate {
     
-    func applyFilter(by filter: [String]) {
-        let filteredAnimals = animals.filter { filter.contains(String($0.kind?.split(separator: "]").first?.split(separator: "[").last ?? "")) }
-        animals = filteredAnimals
-
-        tableView.reloadData()
+    func applyFilter(kind: String, neutralizationStatus: String) {
+        print(kind, neutralizationStatus)
+        setDatasByFilter(kind: kind, neutralizationStatus: neutralizationStatus)
     }
     
 }
