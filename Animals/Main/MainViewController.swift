@@ -221,8 +221,8 @@ final class MainViewController: UIViewController {
     }
     
     // 필터용
-    private func setDatasByFilter(kind: String, neutralizationStatus: String) {
-        networkManager.fetchAnimal(regionQuery: regionQuery, pageNumberQuery: pageNumberQuery, kindQuery: kind, neutralizationQuery: neutralizationStatus) { result in
+    private func setDatasByFilter(kindQuery: String, neutralizationStatusQuery: String) {
+        networkManager.fetchAnimal(regionQuery: regionQuery, pageNumberQuery: pageNumberQuery, kindQuery: kindQuery, neutralizationStatusQuery: neutralizationStatusQuery) { result in
             switch result {
             case .success(let animalDatas):
                 self.animals = animalDatas
@@ -350,7 +350,7 @@ extension MainViewController {
 extension MainViewController: FilterDelegate {
     
     func applyFilter(kind: String, neutralizationStatus: String) {
-        setDatasByFilter(kind: kind, neutralizationStatus: neutralizationStatus)
+        setDatasByFilter(kindQuery: kind, neutralizationStatusQuery: neutralizationStatus)
     }
     
 }
