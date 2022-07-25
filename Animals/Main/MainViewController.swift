@@ -12,8 +12,8 @@ final class MainViewController: UIViewController {
     // MARK: - 네트워크 매니저
     
     private var networkManager = NetworkManager.shared
-    private var regionQuery = Region.none.query
-    private var pageNumberQuery = 1
+    private var region = Region.none
+    private var pageNumber = 1
     private var fetchMore = false
     
     // MARK: - 유기동물 데이터 배열
@@ -34,7 +34,7 @@ final class MainViewController: UIViewController {
         region.forEach { actions.append(UIAction(title: $0.name) { action in
             self.navRegionSelectButton.setTitle(action.title, for: .normal)
             self.makeRegionQuery(action.title)
-            self.setDatas(by: self.regionQuery)
+            self.setDatas(by: self.region)
         })
         }
         
@@ -130,7 +130,7 @@ final class MainViewController: UIViewController {
         let filterVC = FilterViewController()
         filterVC.delegate = self
         
-        setDatas(by: regionQuery)
+        setDatas(by: region)
         present(filterVC, animated: true)
     }
     
@@ -182,8 +182,8 @@ final class MainViewController: UIViewController {
     }
     
     // 지역에 맞는 데이터
-    private func setDatas(by region: String) {
-        networkManager.fetchAnimal(regionQuery: region) { result in
+    private func setDatas(by region: Region) {
+        networkManager.fetchAnimal(region: region) { result in
             switch result {
             case .success(let animalDatas):
                 self.animals = animalDatas
@@ -198,8 +198,8 @@ final class MainViewController: UIViewController {
     
     // 무한 스크롤용
     private func appendDatas() {
-        networkManager.fetchAnimal(regionQuery: regionQuery, pageNumberQuery: pageNumberQuery) { result in
-            self.pageNumberQuery += 1
+        networkManager.fetchAnimal(pageNumber: pageNumber, region: region) { result in
+            self.pageNumber += 1
             switch result {
             case .success(let animalDatas):
                 self.animals.append(contentsOf: animalDatas)
@@ -214,8 +214,8 @@ final class MainViewController: UIViewController {
     }
     
     // 필터용
-    private func setDatasByFilter(kindQuery: String, neutralizationStatusQuery: String) {
-        networkManager.fetchAnimal(regionQuery: regionQuery, pageNumberQuery: pageNumberQuery, kindQuery: kindQuery, neutralizationStatusQuery: neutralizationStatusQuery) { result in
+    private func setDatasByFilter(kind: Kind?, neutralizationStatus: NeutralizationStatus?) {
+        networkManager.fetchAnimal(pageNumber: pageNumber, region: region, kind: kind, neutralizationStatus: neutralizationStatus) { result in
             switch result {
             case .success(let animalDatas):
                 self.animals = animalDatas
@@ -232,39 +232,39 @@ final class MainViewController: UIViewController {
     
     private func makeRegionQuery(_ string: String) {
         if string == "전국" {
-            regionQuery = Region.none.query
+            region = Region.none
         } else if string == "서울특별시" {
-            regionQuery = Region.seoul.query
+            region = Region.seoul
         } else if string == "부산광역시" {
-            regionQuery = Region.busan.query
+            region = Region.busan
         } else if string == "대구광역시" {
-            regionQuery = Region.daegu.query
+            region = Region.daegu
         }  else if string == "인천광역시" {
-            regionQuery = Region.incheon.query
+            region = Region.incheon
         } else if string == "광주광역시" {
-            regionQuery = Region.gwangju.query
+            region = Region.gwangju
         } else if string == "대전광역시" {
-            regionQuery = Region.daejeon.query
+            region = Region.daejeon
         } else if string == "울산광역시" {
-            regionQuery = Region.ulsan.query
+            region = Region.ulsan
         } else if string == "경기도" {
-            regionQuery = Region.gyeonggi.query
+            region = Region.gyeonggi
         } else if string == "강원도" {
-            regionQuery = Region.gangwon.query
+            region = Region.gangwon
         } else if string == "충청북도" {
-            regionQuery = Region.choongbook.query
+            region = Region.choongbook
         } else if string == "충청남도" {
-            regionQuery = Region.choongnam.query
+            region = Region.choongnam
         } else if string == "전라북도" {
-            regionQuery = Region.jeonbook.query
+            region = Region.jeonbook
         } else if string == "전라남도" {
-            regionQuery = Region.jeonnam.query
+            region = Region.jeonnam
         } else if string == "경상북도" {
-            regionQuery = Region.gyeongbook.query
+            region = Region.gyeongbook
         } else if string == "경상남도" {
-            regionQuery = Region.gyeongnam.query
+            region = Region.gyeongnam
         } else if string == "제주특별자치도" {
-            regionQuery = Region.jeju.query
+            region = Region.jeju
         }
     }
     
@@ -342,8 +342,8 @@ extension MainViewController {
 
 extension MainViewController: FilterDelegate {
     
-    func applyFilter(kindQuery: String, neutralizationStatusQuery: String) {
-        setDatasByFilter(kindQuery: kindQuery, neutralizationStatusQuery: neutralizationStatusQuery)
+    func applyFilter(kind: Kind?, neutralizationStatus: NeutralizationStatus?) {
+        setDatasByFilter(kind: kind, neutralizationStatus: neutralizationStatus)
     }
     
 }
