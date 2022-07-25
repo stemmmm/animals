@@ -87,12 +87,10 @@ struct Item: Codable {
     
     // 성별 한글로 바꿔줌
     var sex: String? {
-        if sexCd == "M" {
-            return "남"
-        } else if sexCd == "F" {
-            return "여"
-        } else {
-            return "미상"
+        switch sexCd {
+        case "M": return "남"
+        case "F": return "여"
+        default: return "미상"
         }
     }
     

@@ -6,9 +6,6 @@
 //
 
 // 0. 필터
-// TODO: 메인에서 필터에 대한 정보를 알아야 함 > 속성 하나 만들어서 저장하고 필터에 넘겨주고 그걸 받아서 다시 패치?
-// TODO: 필터 다듬기(선택한 지역이 저장된 채로 필터가 돼야함)
-// TODO: 필터 계속 적용되면 아무것도 안나옴 > 필터 제거 기능
 // TODO: 리프레시 기능!! 데이터 안받아와지거나 서버 이상할때
 
 // 2.
@@ -336,9 +333,6 @@ extension MainViewController {
 // MARK: - FilterDelegate
 
 extension MainViewController: FilterDelegate {
-    
-    // TODO: 필터에 포함돼있으면 처음부터 색깔 초록색으로 표시
-    // TODO: 무한 스크롤 할 때도 필터 적용된 정보들만 로드
     
     func applyFilter(by filter: [String]) {
         let filteredAnimals = animals.filter { filter.contains(String($0.kind?.split(separator: "]").first?.split(separator: "[").last ?? "")) }
