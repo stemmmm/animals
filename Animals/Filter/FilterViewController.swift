@@ -20,7 +20,7 @@ final class FilterViewController: UIViewController {
     }
     
     // MARK: - 품종
-    private let headerLabel: UILabel = {
+    private let kindLabel: UILabel = {
         let label = UILabel()
         label.text = "품종"
         label.font = .boldSystemFont(ofSize: 18)
@@ -51,7 +51,7 @@ final class FilterViewController: UIViewController {
         return button
     }()
     
-    private lazy var buttonStack: UIStackView = {
+    private lazy var firstButtonStack: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [dogButton, catButton, etcButton])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
@@ -60,12 +60,66 @@ final class FilterViewController: UIViewController {
         return stackView
     }()
     
-    private lazy var superStack: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, buttonStack])
+    private lazy var firstSuperStack: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [kindLabel, firstButtonStack])
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.alignment = .fill
         stackView.spacing = 20
+        return stackView
+    }()
+    
+    // MARK: - 중성화 여부
+    
+    private let neutralizedLabel: UILabel = {
+        let label = UILabel()
+        label.text = "중성화 여부"
+        label.font = .boldSystemFont(ofSize: 18)
+        return label
+    }()
+    
+    private let yesButton: FilterCategoryButton = {
+        let button = FilterCategoryButton()
+        button.setTitle("예", for: .normal)
+        button.tag = Tag.dog.rawValue
+        button.addTarget(self, action: #selector(categoryButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private let noButton: FilterCategoryButton = {
+        let button = FilterCategoryButton()
+        button.setTitle("아니오", for: .normal)
+        button.tag = Tag.cat.rawValue
+        button.addTarget(self, action: #selector(categoryButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var secondButtonStack: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [yesButton, noButton])
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.alignment = .fill
+        stackView.spacing = 20
+        return stackView
+    }()
+    
+    private lazy var secondSuperStack: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [neutralizedLabel, secondButtonStack])
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.spacing = 20
+        return stackView
+    }()
+    
+    // MARK: - super stack
+    
+    private lazy var superStack: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [firstSuperStack, secondSuperStack])
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.spacing = 40
         return stackView
     }()
     
@@ -165,6 +219,17 @@ final class FilterViewController: UIViewController {
             superStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
     }
+    
+//    private func setSecondSuperStackConstraints() {
+//        view.addSubview(secondSuperStack)
+//        secondSuperStack.translatesAutoresizingMaskIntoConstraints = false
+//
+//        NSLayoutConstraint.activate([
+//            secondSuperStack.topAnchor.constraint(equalTo: first, constant: 65),
+//            secondSuperStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+//            secondSuperStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+//        ])
+//    }
     
     private func setbottomButtonStackViewConstraints() {
         view.addSubview(bottomButtonStackView)
