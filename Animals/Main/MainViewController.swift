@@ -350,7 +350,6 @@ extension MainViewController {
 extension MainViewController: FilterDelegate {
     
     func applyFilter(kind: String, neutralizationStatus: String) {
-        print(kind, neutralizationStatus)
         setDatasByFilter(kind: kind, neutralizationStatus: neutralizationStatus)
     }
     

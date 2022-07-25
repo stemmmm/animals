@@ -194,7 +194,6 @@ final class FilterViewController: UIViewController {
         } else {
             kind = nil
         }
-        print(kind)
     }
     
     @objc private func neutralizedButtonTapped(sender: FilterCategoryButton) {
@@ -206,7 +205,6 @@ final class FilterViewController: UIViewController {
         case "아니오": neutralizationStatus = "N"
         default: neutralizationStatus = nil
         }
-        print(neutralizationStatus)
     }
     
     @objc private func resetButtonTapped(sender: UIButton) {
