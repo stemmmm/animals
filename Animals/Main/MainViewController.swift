@@ -28,14 +28,12 @@ final class MainViewController: UIViewController {
     
     // 지역 선택 컨텍스트 메뉴
     private lazy var regionMenu: UIMenu = {
-        var actions: [UIAction] = []
-        let region = Region.allCases
-        
-        region.forEach { actions.append(UIAction(title: $0.name) { action in
-            self.navRegionSelectButton.setTitle(action.title, for: .normal)
-            self.makeRegionQuery(action.title)
-            self.setDatas(by: self.region)
-        })
+        var actions = Region.allCases.map { region in
+            UIAction(title: region.name) { action in
+                self.navRegionSelectButton.setTitle(action.title, for: .normal)
+                self.makeRegionQuery(action.title)
+                self.setDatas(by: self.region)
+            }
         }
         
         let menu = UIMenu(children: actions)
