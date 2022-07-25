@@ -5,13 +5,6 @@
 //  Created by 정호윤 on 2022/07/11.
 //
 
-// 0. 필터
-// TODO: 리프레시 기능!! 데이터 안받아와지거나 서버 이상할때
-
-// 2.
-// TODO: fetch 기다릴때(맨 처음, 스크롤) 액티비티 인디케이터 or 플레이스 홀더
-// 필터한 값 없으면 없다고 알려주기 /// 지역 바꾸면 화면 맨위로 자동으로 보내주기
-
 import UIKit
 
 final class MainViewController: UIViewController {
@@ -349,8 +342,8 @@ extension MainViewController {
 
 extension MainViewController: FilterDelegate {
     
-    func applyFilter(kind: String, neutralizationStatus: String) {
-        setDatasByFilter(kindQuery: kind, neutralizationStatusQuery: neutralizationStatus)
+    func applyFilter(kindQuery: String, neutralizationStatusQuery: String) {
+        setDatasByFilter(kindQuery: kindQuery, neutralizationStatusQuery: neutralizationStatusQuery)
     }
     
 }
@@ -361,7 +354,6 @@ extension MainViewController: ButtonDelegate {
     
     func buttonTapped() {
         print("main: button tapped")
-        
     }
     
 }
