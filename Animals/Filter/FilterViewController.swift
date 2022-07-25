@@ -153,31 +153,17 @@ final class FilterViewController: UIViewController {
     
     // MARK: - buttonSelected
     
-    func deselectKindButtons() {
-        dogButton.isOn = false
-        catButton.isOn = false
-        etcButton.isOn = false
-    }
-    
-    func deselectNeutralizationButtons() {
-        yesButton.isOn = false
-        noButton.isOn = false
-    }
-    
     @objc private func kindButtonTapped(sender: FilterCategoryButton) {
         deselectKindButtons()
         sender.isOn.toggle()
         
-        if sender.isOn == true {
-            switch sender.titleLabel?.text {
-            case "🐶강아지": kind = .dog
-            case "🐱고양이": kind = .cat
-            case "기타": kind = .etc
-            default: kind = nil
-            }
-        } else {
-            kind = nil
+        switch sender.titleLabel?.text {
+        case "🐶강아지": kind = .dog
+        case "🐱고양이": kind = .cat
+        case "기타": kind = .etc
+        default: kind = nil
         }
+        
     }
     
     @objc private func neutralizedButtonTapped(sender: FilterCategoryButton) {
@@ -189,6 +175,17 @@ final class FilterViewController: UIViewController {
         case "아니오": neutralizationStatus = .no
         default: neutralizationStatus = nil
         }
+    }
+    
+    private func deselectKindButtons() {
+        dogButton.isOn = false
+        catButton.isOn = false
+        etcButton.isOn = false
+    }
+    
+    private func deselectNeutralizationButtons() {
+        yesButton.isOn = false
+        noButton.isOn = false
     }
     
     @objc private func resetButtonTapped(sender: UIButton) {
