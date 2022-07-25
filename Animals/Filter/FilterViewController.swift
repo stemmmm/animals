@@ -94,12 +94,18 @@ final class FilterViewController: UIViewController {
         return button
     }()
     
+    private let spacer: FilterCategoryButton = {
+        let button = FilterCategoryButton()
+        button.backgroundColor = .clear
+        return button
+    }()
+    
     private lazy var secondButtonStack: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [yesButton, noButton])
+        let stackView = UIStackView(arrangedSubviews: [yesButton, noButton, spacer])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.alignment = .fill
-        stackView.spacing = 20
+        stackView.spacing = 10
         return stackView
     }()
     
@@ -219,17 +225,6 @@ final class FilterViewController: UIViewController {
             superStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
     }
-    
-//    private func setSecondSuperStackConstraints() {
-//        view.addSubview(secondSuperStack)
-//        secondSuperStack.translatesAutoresizingMaskIntoConstraints = false
-//
-//        NSLayoutConstraint.activate([
-//            secondSuperStack.topAnchor.constraint(equalTo: first, constant: 65),
-//            secondSuperStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-//            secondSuperStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
-//        ])
-//    }
     
     private func setbottomButtonStackViewConstraints() {
         view.addSubview(bottomButtonStackView)
