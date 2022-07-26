@@ -13,7 +13,7 @@ struct AnimalApi {
     static let requestUrl = "http://apis.data.go.kr/1543061/abandonmentPublicSrvc/abandonmentPublic?_type=json"
     static let key = "serviceKey=n1TP%2BU609SiYa5OWk03fYi1r4ASh04%2F2g54Hixw8os6IIzkhypv3doFp8CT2m4s9jfgTm%2F1G%2BPspd3XmzkbDcw%3D%3D"
     static let stateQuery = "state=notice"
-    static let numberOfRowsQuery = "numOfRows=200"
+    static var numberOfRowsQuery = "numOfRows=10"
 }
 
 enum Region: CaseIterable {

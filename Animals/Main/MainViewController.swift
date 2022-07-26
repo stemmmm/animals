@@ -5,6 +5,8 @@
 //  Created by 정호윤 on 2022/07/11.
 //
 
+// MARK: - 기타축종, 중성화된 동물들 선택했을때만 다르게?
+
 import UIKit
 
 final class MainViewController: UIViewController {
@@ -212,8 +214,8 @@ final class MainViewController: UIViewController {
     }
     
     // 필터용
-    private func setDatasByFilter(kind: Kind?, neutralizationStatus: NeutralizationStatus?) {
-        networkManager.fetchAnimal(pageNumber: pageNumber, region: region, kind: kind, neutralizationStatus: neutralizationStatus) { result in
+    private func setDatasByFilter(kind: Kind?) {
+        networkManager.fetchAnimal(pageNumber: pageNumber, region: region, kind: kind) { result in
             switch result {
             case .success(let animalDatas):
                 self.animals = animalDatas
@@ -340,8 +342,8 @@ extension MainViewController {
 
 extension MainViewController: FilterDelegate {
     
-    func applyFilter(kind: Kind?, neutralizationStatus: NeutralizationStatus?) {
-        setDatasByFilter(kind: kind, neutralizationStatus: neutralizationStatus)
+    func applyFilter(kind: Kind?) {
+        setDatasByFilter(kind: kind)
     }
     
 }

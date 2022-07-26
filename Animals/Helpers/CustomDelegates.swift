@@ -8,7 +8,7 @@
 import Foundation
 
 protocol FilterDelegate: AnyObject {
-    func applyFilter(kind: Kind?, neutralizationStatus: NeutralizationStatus?)
+    func applyFilter(kind: Kind?)
 }
 
 protocol ButtonDelegate: AnyObject {
