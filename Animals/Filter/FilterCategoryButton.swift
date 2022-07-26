@@ -19,7 +19,7 @@ final class FilterCategoryButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.clipsToBounds = true
-        self.layer.cornerRadius = 18
+        self.layer.cornerRadius = 16
         self.titleLabel?.font = .systemFont(ofSize: 16, weight: .regular)
         setView()
     }
