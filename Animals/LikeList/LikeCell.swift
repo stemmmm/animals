@@ -12,7 +12,7 @@ final class LikeCell: UICollectionViewCell {
     // MARK: - 받아온 데이터 세팅
     var animal: Item? {
         didSet {
-            durationDateLabel.text = "공고 종료 \(animal?.noticeLeftDays ?? 0)일 전"
+            durationDateLabel.text = "공고 종료 \(animal?.noticeLeftDays ?? "??")일 전"
         }
     }
     

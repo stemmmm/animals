@@ -15,9 +15,9 @@ final class AnimalCell: UITableViewCell {
     // MARK: - 받아온 데이터 세팅
     var animal: Item? {
         didSet {
-            durationDateLabel.text = "공고 종료 \(animal?.noticeLeftDays ?? 0)일 전"
+            durationDateLabel.text = "공고 종료 \(animal?.noticeLeftDays ?? "??")일 전"
             kindLabel.text = animal?.kind
-            informationLabel.text = "\(animal?.sex ?? "미상") · \(animal?.age ?? 0)세"
+            informationLabel.text = "\(animal?.sex ?? "미상") · \(animal?.age ?? "??")세"
             shelterLabel.text = animal?.shelterName
         }
     }

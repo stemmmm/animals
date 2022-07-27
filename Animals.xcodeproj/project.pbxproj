@@ -30,10 +30,11 @@
 		7B8B8C1A287C689B00A6E559 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8B8C19287C689B00A6E559 /* AppDelegate.swift */; };
 		7B8B8C1C287C689B00A6E559 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8B8C1B287C689B00A6E559 /* SceneDelegate.swift */; };
 		7B8B8C1E287C689B00A6E559 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8B8C1D287C689B00A6E559 /* MainViewController.swift */; };
-		7B8B8C24287C689B00A6E559 /* Animals.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7B8B8C22287C689B00A6E559 /* Animals.xcdatamodeld */; };
+		7B8B8C24287C689B00A6E559 /* LikedAnimal.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7B8B8C22287C689B00A6E559 /* LikedAnimal.xcdatamodeld */; };
 		7B8B8C26287C689C00A6E559 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B8B8C25287C689C00A6E559 /* Assets.xcassets */; };
 		7B8B8C29287C689C00A6E559 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B8B8C27287C689C00A6E559 /* LaunchScreen.storyboard */; };
 		7B8B8C32287C68A900A6E559 /* Animal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8B8C31287C68A900A6E559 /* Animal.swift */; };
+		7BE55D312891820900075706 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE55D302891820900075706 /* CoreDataManager.swift */; };
 		7BF74928287D1F9300FBA5C7 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF74927287D1F9300FBA5C7 /* NetworkManager.swift */; };
 		7BF7492B287D238600FBA5C7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF7492A287D238600FBA5C7 /* Constants.swift */; };
 		7BF7492D287D355500FBA5C7 /* AnimalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF7492C287D355500FBA5C7 /* AnimalCell.swift */; };
@@ -72,6 +73,7 @@
 		7B8B8C28287C689C00A6E559 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7B8B8C2A287C689C00A6E559 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7B8B8C31287C68A900A6E559 /* Animal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animal.swift; sourceTree = "<group>"; };
+		7BE55D302891820900075706 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		7BF74927287D1F9300FBA5C7 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		7BF7492A287D238600FBA5C7 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		7BF7492C287D355500FBA5C7 /* AnimalCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimalCell.swift; sourceTree = "<group>"; };
@@ -237,7 +239,8 @@
 		7BE55D2F2891800400075706 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				7B8B8C22287C689B00A6E559 /* Animals.xcdatamodeld */,
+				7B8B8C22287C689B00A6E559 /* LikedAnimal.xcdatamodeld */,
+				7BE55D302891820900075706 /* CoreDataManager.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -336,10 +339,11 @@
 				7B2240772887E1760085731B /* AnimalShelterInfoView.swift in Sources */,
 				7B8B8C1E287C689B00A6E559 /* MainViewController.swift in Sources */,
 				7B2240742887E1760085731B /* DetailViewTabbarDelegate.swift in Sources */,
+				7BE55D312891820900075706 /* CoreDataManager.swift in Sources */,
 				7B224019288449F50085731B /* ColumnFlowLayout.swift in Sources */,
 				7B2240722887E1760085731B /* NoticeInfoView.swift in Sources */,
 				7B22405E2887DF960085731B /* UIColor.swift in Sources */,
-				7B8B8C24287C689B00A6E559 /* Animals.xcdatamodeld in Sources */,
+				7B8B8C24287C689B00A6E559 /* LikedAnimal.xcdatamodeld in Sources */,
 				7B2240732887E1760085731B /* DetailViewTabbar.swift in Sources */,
 				7B22407C288826D10085731B /* HeartButton.swift in Sources */,
 				7B8B8C1A287C689B00A6E559 /* AppDelegate.swift in Sources */,
@@ -568,13 +572,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		7B8B8C22287C689B00A6E559 /* Animals.xcdatamodeld */ = {
+		7B8B8C22287C689B00A6E559 /* LikedAnimal.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				7B8B8C23287C689B00A6E559 /* Animals.xcdatamodel */,
 			);
 			currentVersion = 7B8B8C23287C689B00A6E559 /* Animals.xcdatamodel */;
-			path = Animals.xcdatamodeld;
+			path = LikedAnimal.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
