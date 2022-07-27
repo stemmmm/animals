@@ -211,7 +211,6 @@
 			children = (
 				7B8B8C19287C689B00A6E559 /* AppDelegate.swift */,
 				7B8B8C1B287C689B00A6E559 /* SceneDelegate.swift */,
-				7B8B8C22287C689B00A6E559 /* Animals.xcdatamodeld */,
 				7B8B8C27287C689C00A6E559 /* LaunchScreen.storyboard */,
 				7BF74929287D237A00FBA5C7 /* Helpers */,
 				7B8B8C30287C68A000A6E559 /* Models */,
@@ -230,8 +229,17 @@
 			children = (
 				7B8B8C31287C68A900A6E559 /* Animal.swift */,
 				7BF74927287D1F9300FBA5C7 /* NetworkManager.swift */,
+				7BE55D2F2891800400075706 /* CoreData */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		7BE55D2F2891800400075706 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				7B8B8C22287C689B00A6E559 /* Animals.xcdatamodeld */,
+			);
+			path = CoreData;
 			sourceTree = "<group>";
 		};
 		7BF74929287D237A00FBA5C7 /* Helpers */ = {
