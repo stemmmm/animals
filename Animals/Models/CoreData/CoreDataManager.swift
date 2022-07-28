@@ -58,7 +58,7 @@ final class CoreDataManager {
         likedAnimal.neutralizationStatus = item.neutralizationStatus
         likedAnimal.weight = item.weight
         likedAnimal.characteristic = item.description
-        likedAnimal.discoveredPlace = item.discoverdPlace
+        likedAnimal.discoveredPlace = item.discoveredPlace
         likedAnimal.shelterName = item.shelterName
         likedAnimal.shelterAddress = item.shelterAddress
         likedAnimal.telNumber = item.telNumber

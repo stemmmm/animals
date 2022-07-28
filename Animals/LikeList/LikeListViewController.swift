@@ -83,7 +83,7 @@ extension LikeListViewController: ButtonDelegate {
     
     func heartButtonTapped(send likedAnimal: LikedAnimal, _ isLiked: Bool) {
         if isLiked {
-//            let item = Item(id: likedAnimal.id, detailImage: likedAnimal.detailImage, noticeNumber: likedAnimal.noticeNumber, noticeStartDate: likedAnimal.noticeStartDate, noticeEndDate: likedAnimal.noticeEndDate, kind: likedAnimal.kind, color: likedAnimal.color, birth: likedAnimal.age, sexCd: likedAnimal.sex, neutralizationStatus: likedAnimal.neutralizationStatus, weight: likedAnimal.weight, description: likedAnimal.characteristic, discoverdPlace: likedAnimal.discoveredPlace, shelterName: likedAnimal.shelterName, shelterAddress: likedAnimal.shelterAddress, telNumber: likedAnimal.telNumber, isLiked: isLiked)
+//            let item = Item(id: likedAnimal.id, detailImage: likedAnimal.detailImage, noticeNumber: likedAnimal.noticeNumber, noticeStartDate: likedAnimal.noticeStartDate, noticeEndDate: likedAnimal.noticeEndDate, kind: likedAnimal.kind, color: likedAnimal.color, birth: likedAnimal.age, sexCd: likedAnimal.sex, neutralizationStatus: likedAnimal.neutralizationStatus, weight: likedAnimal.weight, description: likedAnimal.characteristic, discoveredPlace: likedAnimal.discoveredPlace, shelterName: likedAnimal.shelterName, shelterAddress: likedAnimal.shelterAddress, telNumber: likedAnimal.telNumber, isLiked: isLiked)
 //            item.noticeLeftDays = likedAnimal.noticeLeftDays
 //            coreDataManager.saveLikedAnimal(with: item)
         } else {

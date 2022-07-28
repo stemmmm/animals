@@ -46,7 +46,7 @@ struct Item: Codable {
     var neutralizationStatus: String? // 중성화 여부 - Y, N, U
     var weight: String?
     var description: String? // 특징
-    var discoverdPlace: String? // 발견장소
+    var discoveredPlace: String? // 발견장소
     
     var shelterName: String?
     var shelterAddress: String?
@@ -68,7 +68,7 @@ struct Item: Codable {
         case neutralizationStatus = "neuterYn"
         case weight = "weight"
         case description = "specialMark"
-        case discoverdPlace = "happenPlace"
+        case discoveredPlace = "happenPlace"
         case shelterName = "careNm"
         case shelterAddress = "careAddr"
         case telNumber = "officetel"
