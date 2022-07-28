@@ -12,5 +12,5 @@ protocol FilterDelegate: AnyObject {
 }
 
 protocol ButtonDelegate: AnyObject {
-    func buttonTapped()
+    func heartButtonTapped(send item: Item)
 }

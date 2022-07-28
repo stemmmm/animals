@@ -24,6 +24,18 @@ final class CoreDataManager {
         return try! context.fetch(LikedAnimal.fetchRequest())
     }
     
+    func getLikedAnimal(by item: Item) -> LikedAnimal? {
+        guard let id = item.id else { return nil }
+        let request = LikedAnimal.fetchRequest()
+        request.predicate = NSPredicate(format: "id = %@", id)
+        do {
+            return try context.fetch(request).first
+        } catch {
+            print("failed to fetch liked animal")
+            return nil
+        }
+    }
+    
     // MARK: - create
     func saveLikedAnimal(with item: Item) {
         let likedAnimal = LikedAnimal(context: context)
@@ -45,12 +57,20 @@ final class CoreDataManager {
         likedAnimal.shelterAddress = item.shelterAddress
         likedAnimal.telNumber = item.telNumber
         try? context.save()
+        print("saved")
     }
     
     // MARK: - delete
-    func deleteLikedAnimal(_ item: LikedAnimal) {
-        context.delete(item)
+    func deleteLikedAnimal(by likedAnimal: LikedAnimal) {
+        context.delete(likedAnimal)
         try? context.save()
+        print("deleted")
     }
     
+    func deleteLikedAnimal(by item: Item) {
+        let likedAnimals = getLikedAnimals().filter { $0.id == item.id }
+        guard let likedAnimal = likedAnimals.first else { return }
+        deleteLikedAnimal(by: likedAnimal)
+    }
+
 }

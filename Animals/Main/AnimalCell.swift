@@ -19,6 +19,9 @@ final class AnimalCell: UITableViewCell {
             kindLabel.text = animal?.kind
             informationLabel.text = "\(animal?.sex ?? "미상") · \(animal?.age ?? "??")세"
             shelterLabel.text = animal?.shelterName
+            
+            heartButton.setImage(UIImage(systemName: animal!.isLiked ? "heart.fill" : "heart"), for: .normal)
+            heartButton.tintColor = animal!.isLiked ? .red : .gray
         }
     }
     
@@ -69,8 +72,8 @@ final class AnimalCell: UITableViewCell {
         return label
     }()
     
-    private lazy var heartButton: HeartButton = {
-        let button = HeartButton()
+    private lazy var heartButton: UIButton = {
+        let button = UIButton()
         button.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -123,9 +126,9 @@ final class AnimalCell: UITableViewCell {
     }
     
     // MARK: - 하트 버튼 탭 함수
-    @objc private func heartButtonTapped(sender: HeartButton) {
-        sender.isOn.toggle()
-        self.delegate?.buttonTapped()
+    @objc private func heartButtonTapped(sender: UIButton) {
+        animal?.isLiked.toggle()
+        self.delegate?.heartButtonTapped(send: animal!)
     }
     
     // MARK: - 오토레이아웃
