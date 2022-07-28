@@ -13,4 +13,16 @@ protocol FilterDelegate: AnyObject {
 
 protocol ButtonDelegate: AnyObject {
     func heartButtonTapped(send item: Item)
+    func heartButtonTapped(send likedAnimal: LikedAnimal, _ isLiked: Bool)
+}
+
+extension ButtonDelegate {
+    
+    func heartButtonTapped(send item: Item) {
+        
+    }
+    
+    func heartButtonTapped(send likedAnimal: LikedAnimal, _ isLiked: Bool) {
+        
+    }
 }

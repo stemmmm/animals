@@ -9,8 +9,18 @@ import UIKit
 
 final class LikeCell: UICollectionViewCell {
     
+    // MARK: - 하트 버튼 델리게이트
+    weak var delegate: ButtonDelegate?
+    
+    var isLiked: Bool = true {
+        didSet {
+            heartButton.setImage(UIImage(systemName: isLiked ? "heart.fill" : "heart"), for: .normal)
+            heartButton.tintColor = isLiked ? .red : .gray
+        }
+    }
+    
     // MARK: - 받아온 데이터 세팅
-    var animal: Item? {
+    var animal: LikedAnimal? {
         didSet {
             durationDateLabel.text = "공고 종료 \(animal?.noticeLeftDays ?? "??")일 전"
         }
@@ -47,6 +57,7 @@ final class LikeCell: UICollectionViewCell {
         let button = UIButton()
         button.setImage(UIImage(systemName: "heart.fill"), for: .normal)
         button.tintColor = .red
+        button.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -59,6 +70,13 @@ final class LikeCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - heart button tapped
+    
+    @objc private func heartButtonTapped(sender: UIButton) {
+        isLiked.toggle()
+        self.delegate?.heartButtonTapped(send: animal!, isLiked)
     }
     
     // MARK: - 뷰 세팅

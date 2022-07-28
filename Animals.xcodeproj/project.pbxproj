@@ -108,9 +108,9 @@
 			isa = PBXGroup;
 			children = (
 				7B6E732E28826EC300F8D84B /* LikeListViewController.swift */,
+				7B6E73302882887700F8D84B /* LikeCell.swift */,
 				7B224018288449F50085731B /* ColumnFlowLayout.swift */,
 				7B6E73322882911900F8D84B /* CollectionHeaderView.swift */,
-				7B6E73302882887700F8D84B /* LikeCell.swift */,
 			);
 			path = LikeList;
 			sourceTree = "<group>";

@@ -38,6 +38,12 @@ final class CoreDataManager {
     
     // MARK: - create
     func saveLikedAnimal(with item: Item) {
+        
+        if getLikedAnimal(by: item) != nil {
+            print("saved entity already exists")
+            return
+        }
+        
         let likedAnimal = LikedAnimal(context: context)
         likedAnimal.id = item.id
         likedAnimal.detailImage = item.detailImage
@@ -72,5 +78,5 @@ final class CoreDataManager {
         guard let likedAnimal = likedAnimals.first else { return }
         deleteLikedAnimal(by: likedAnimal)
     }
-
+    
 }

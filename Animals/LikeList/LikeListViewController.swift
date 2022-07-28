@@ -13,10 +13,7 @@ final class LikeListViewController: UIViewController {
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: ColumnFlowLayout())
     
     // MARK: - 네트워크 매니저
-    private let networkManager = NetworkManager.shared
-    
-    // MARK: - 유기동물 데이터 배열
-    private var animals: [Item] = []
+    private let coreDataManager = CoreDataManager.shared
 
     // MARK: - viewDidLoad
     override func viewDidLoad() {
@@ -27,8 +24,6 @@ final class LikeListViewController: UIViewController {
         
         setCollectionView()
         setCollectionViewConstraints()
-        
-        setDatas()
     }
     
     // MARK: - 네비게이션 바 세팅
@@ -59,38 +54,20 @@ final class LikeListViewController: UIViewController {
         ])
     }
     
-    // MARK: - 데이터 세팅
-    private func setDatas() {
-        networkManager.fetchAnimal { result in
-            switch result {
-            case .success(let animalDatas):
-                self.animals = animalDatas
-                // 데이터 받아온 후 메인 쓰레드에서 테이블 뷰 리로드
-                DispatchQueue.main.async {
-                    self.collectionView.reloadData()
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
 }
 
 // MARK: - UICollectionViewDataSource
 extension LikeListViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        animals.count
+        coreDataManager.getLikedAnimals().count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LikeCell", for: indexPath) as! LikeCell
-        
-        // 데이터 전달
-        cell.imageUrl = animals[indexPath.row].detailImage
-        cell.animal = animals[indexPath.row]
-        
+        cell.delegate = self
+        cell.imageUrl = coreDataManager.getLikedAnimals()[indexPath.row].detailImage
+        cell.animal = coreDataManager.getLikedAnimals()[indexPath.row]
         return cell
     }
     
@@ -100,4 +77,18 @@ extension LikeListViewController: UICollectionViewDataSource {
         return headerView
     }
     
+}
+
+extension LikeListViewController: ButtonDelegate {
+    
+    func heartButtonTapped(send likedAnimal: LikedAnimal, _ isLiked: Bool) {
+        if isLiked {
+//            let item = Item(id: likedAnimal.id, detailImage: likedAnimal.detailImage, noticeNumber: likedAnimal.noticeNumber, noticeStartDate: likedAnimal.noticeStartDate, noticeEndDate: likedAnimal.noticeEndDate, kind: likedAnimal.kind, color: likedAnimal.color, birth: likedAnimal.age, sexCd: likedAnimal.sex, neutralizationStatus: likedAnimal.neutralizationStatus, weight: likedAnimal.weight, description: likedAnimal.characteristic, discoverdPlace: likedAnimal.discoveredPlace, shelterName: likedAnimal.shelterName, shelterAddress: likedAnimal.shelterAddress, telNumber: likedAnimal.telNumber, isLiked: isLiked)
+//            item.noticeLeftDays = likedAnimal.noticeLeftDays
+//            coreDataManager.saveLikedAnimal(with: item)
+        } else {
+            coreDataManager.deleteLikedAnimal(by: likedAnimal)
+        }
+    }
+
 }

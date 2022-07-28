@@ -88,10 +88,12 @@ final class MainViewController: UIViewController {
         setDatas(by: region)
     }
     
-    // MARK: - (임시) viewWillAppear로 네비게이션 ui 다시 세팅
+    // MARK: - viewWillAppear
     
     override func viewWillAppear(_ animated: Bool) {
         setNavBar()
+        // 관심 목록 편집 후 반영되게 하기 위해
+        tableView.reloadData()
     }
     
     
@@ -265,17 +267,14 @@ extension MainViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // 힙에 올라간 셀 사용
         let cell = tableView.dequeueReusableCell(withIdentifier: "AnimalCell", for: indexPath) as! AnimalCell
-        
         cell.delegate = self
-        
-        // 셀에 데이터 전달
         cell.imageUrl = animals[indexPath.row].detailImage
         cell.animal = animals[indexPath.row]
-        
+        if cell.animal?.id == coreDataManager.getLikedAnimal(by: cell.animal!)?.id {
+            cell.animal?.isLiked = true
+        }
         cell.selectionStyle = .none
-        
         return cell
     }
     
