@@ -13,11 +13,8 @@ final class LikeListViewController: UIViewController {
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: ColumnFlowLayout())
     
     // MARK: - 네트워크 매니저
-    private let networkManager = NetworkManager.shared
+    private let coreDataManager = CoreDataManager.shared
     
-    // MARK: - 유기동물 데이터 배열
-    private var animals: [Item] = []
-
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,15 +24,13 @@ final class LikeListViewController: UIViewController {
         
         setCollectionView()
         setCollectionViewConstraints()
-        
-        setDatas()
     }
     
     // MARK: - 네비게이션 바 세팅
     private func setNavBar() {
         navigationItem.title = "관심 목록"
     }
-
+    
     // MARK: - 컬렉션 뷰 세팅
     private func setCollectionView() {
         collectionView.dataSource = self
@@ -45,7 +40,7 @@ final class LikeListViewController: UIViewController {
         collectionView.register(LikeCell.self, forCellWithReuseIdentifier: "LikeCell")
         collectionView.register(CollectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
     }
-
+    
     // 컬렉션 뷰 오토레이아웃 세팅
     private func setCollectionViewConstraints() {
         view.addSubview(collectionView)
@@ -59,38 +54,20 @@ final class LikeListViewController: UIViewController {
         ])
     }
     
-    // MARK: - 데이터 세팅
-    private func setDatas() {
-        networkManager.fetchAnimal { result in
-            switch result {
-            case .success(let animalDatas):
-                self.animals = animalDatas
-                // 데이터 받아온 후 메인 쓰레드에서 테이블 뷰 리로드
-                DispatchQueue.main.async {
-                    self.collectionView.reloadData()
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
 }
 
 // MARK: - UICollectionViewDataSource
 extension LikeListViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        animals.count
+        coreDataManager.getLikedAnimals().count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LikeCell", for: indexPath) as! LikeCell
-        
-        // 데이터 전달
-        cell.imageUrl = animals[indexPath.row].detailImage
-        cell.animal = animals[indexPath.row]
-        
+        cell.delegate = self
+        cell.imageUrl = coreDataManager.getLikedAnimals()[indexPath.row].detailImage
+        cell.animal = coreDataManager.getLikedAnimals()[indexPath.row]
         return cell
     }
     
@@ -98,6 +75,19 @@ extension LikeListViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header", for: indexPath) as! CollectionHeaderView
         return headerView
+    }
+    
+}
+
+extension LikeListViewController: ButtonDelegate {
+    
+    func heartButtonTapped(send likedAnimal: LikedAnimal, _ isLiked: Bool) {
+        if !isLiked {
+            coreDataManager.deleteLikedAnimal(by: likedAnimal)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.collectionView.reloadData()
+            }
+        }
     }
     
 }

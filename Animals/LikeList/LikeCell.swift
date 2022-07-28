@@ -9,10 +9,20 @@ import UIKit
 
 final class LikeCell: UICollectionViewCell {
     
-    // MARK: - 받아온 데이터 세팅
-    var animal: Item? {
+    // MARK: - 하트 버튼 델리게이트
+    weak var delegate: ButtonDelegate?
+    
+    var isLiked: Bool = true {
         didSet {
-            durationDateLabel.text = "공고 종료 \(animal?.noticeLeftDays ?? 0)일 전"
+            heartButton.setImage(UIImage(systemName: isLiked ? "heart.fill" : "heart"), for: .normal)
+            heartButton.tintColor = isLiked ? .red : .gray
+        }
+    }
+    
+    // MARK: - 받아온 데이터 세팅
+    var animal: LikedAnimal? {
+        didSet {
+            leftDaysLabel.text = "공고 종료 \(animal?.noticeLeftDays ?? "??")일 전"
         }
     }
     
@@ -32,7 +42,7 @@ final class LikeCell: UICollectionViewCell {
         return imageView
     }()
     
-    private let durationDateLabel: UILabel = {
+    private let leftDaysLabel: UILabel = {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 12)
         label.textAlignment = .center
@@ -47,6 +57,7 @@ final class LikeCell: UICollectionViewCell {
         let button = UIButton()
         button.setImage(UIImage(systemName: "heart.fill"), for: .normal)
         button.tintColor = .red
+        button.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -61,14 +72,21 @@ final class LikeCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - heart button tapped
+    
+    @objc private func heartButtonTapped(sender: UIButton) {
+        isLiked.toggle()
+        self.delegate?.heartButtonTapped(send: animal!, isLiked)
+    }
+    
     // MARK: - 뷰 세팅
     private func setView() {
         self.addSubview(thumbnailImageView)
-        self.addSubview(durationDateLabel)
+        self.addSubview(leftDaysLabel)
         self.addSubview(heartButton)
         
         thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
-        durationDateLabel.translatesAutoresizingMaskIntoConstraints = false
+        leftDaysLabel.translatesAutoresizingMaskIntoConstraints = false
         heartButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -77,10 +95,10 @@ final class LikeCell: UICollectionViewCell {
             thumbnailImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             thumbnailImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
-            durationDateLabel.heightAnchor.constraint(equalToConstant: 24),
-            durationDateLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
-            durationDateLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 27),
-            durationDateLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -28),
+            leftDaysLabel.heightAnchor.constraint(equalToConstant: 24),
+            leftDaysLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
+            leftDaysLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 27),
+            leftDaysLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -28),
             
             heartButton.widthAnchor.constraint(equalToConstant: 20),
             heartButton.heightAnchor.constraint(equalToConstant: 20),
@@ -93,15 +111,10 @@ final class LikeCell: UICollectionViewCell {
     private func loadImage() {
         guard let urlString = imageUrl, let url = URL(string: urlString) else { return }
         
-        // 비동기 처리(Data 메서드가 동기적이라)
         DispatchQueue.global().async {
-            // URL을 가지고 데이터를 만드는 메서드 (동기적인 실행)
             guard let data = try? Data(contentsOf: url) else { return }
-            
-            // 오래걸리는 작업이 일어나고 있는 동안에 url이 바뀔 가능성 제거
             guard urlString == url.absoluteString else { return }
             
-            // 작업의 결과물을 이미지로 표시(메인 큐로 디스패치)
             DispatchQueue.main.async {
                 self.thumbnailImageView.image = UIImage(data: data)
             }

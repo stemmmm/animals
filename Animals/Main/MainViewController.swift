@@ -5,8 +5,6 @@
 //  Created by 정호윤 on 2022/07/11.
 //
 
-// MARK: - 기타축종, 중성화된 동물들 선택했을때만 다르게?
-
 import UIKit
 
 final class MainViewController: UIViewController {
@@ -21,6 +19,10 @@ final class MainViewController: UIViewController {
     // MARK: - 유기동물 데이터 배열
     
     private var animals: [Item] = []
+    
+    // MARK: - 코어 데이터 매니저
+    
+    private var coreDataManager = CoreDataManager.shared
     
     // MARK: -  테이블 뷰 생성
     
@@ -83,13 +85,15 @@ final class MainViewController: UIViewController {
         setTableView()
         setTableViewConstraints()
         
-        setDatas()
+        setDatas(by: region)
     }
     
-    // MARK: - (임시) viewWillAppear로 네비게이션 ui 다시 세팅
+    // MARK: - viewWillAppear
     
     override func viewWillAppear(_ animated: Bool) {
         setNavBar()
+        // 관심 목록 편집 후 반영되게 하기 위해
+        tableView.reloadData()
     }
     
     
@@ -165,30 +169,14 @@ final class MainViewController: UIViewController {
     
     // MARK: - fetch 함수들
     
-    // 초기 세팅
-    private func setDatas() {
-        networkManager.fetchAnimal { result in
-            switch result {
-            case .success(let animalDatas):
-                self.animals = animalDatas
-                // 데이터 받아온 후 메인 쓰레드에서 테이블 뷰 리로드
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
     // 지역에 맞는 데이터
     private func setDatas(by region: Region) {
-        networkManager.fetchAnimal(region: region) { result in
+        networkManager.fetchAnimal(region: region) { [weak self] result in
             switch result {
             case .success(let animalDatas):
-                self.animals = animalDatas
+                self?.animals = animalDatas
                 DispatchQueue.main.async {
-                    self.tableView.reloadData()
+                    self?.tableView.reloadData()
                 }
             case .failure(let error):
                 print(error)
@@ -198,14 +186,14 @@ final class MainViewController: UIViewController {
     
     // 무한 스크롤용
     private func appendDatas() {
-        networkManager.fetchAnimal(pageNumber: pageNumber, region: region) { result in
-            self.pageNumber += 1
+        networkManager.fetchAnimal(pageNumber: pageNumber, region: region) { [weak self] result in
+            self?.pageNumber += 1
             switch result {
             case .success(let animalDatas):
-                self.animals.append(contentsOf: animalDatas)
-                self.fetchMore = false
+                self?.animals.append(contentsOf: animalDatas)
+                self?.fetchMore = false
                 DispatchQueue.main.async {
-                    self.tableView.reloadData()
+                    self?.tableView.reloadData()
                 }
             case .failure(let error):
                 print(error)
@@ -279,17 +267,14 @@ extension MainViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // 힙에 올라간 셀 사용
         let cell = tableView.dequeueReusableCell(withIdentifier: "AnimalCell", for: indexPath) as! AnimalCell
-        
         cell.delegate = self
-        
-        // 셀에 데이터 전달
         cell.imageUrl = animals[indexPath.row].detailImage
         cell.animal = animals[indexPath.row]
-        
+        if cell.animal?.id == coreDataManager.getLikedAnimal(by: cell.animal!)?.id {
+            cell.animal?.isLiked = true
+        }
         cell.selectionStyle = .none
-        
         return cell
     }
     
@@ -352,8 +337,12 @@ extension MainViewController: FilterDelegate {
 
 extension MainViewController: ButtonDelegate {
     
-    func buttonTapped() {
-        print("main: button tapped")
+    func heartButtonTapped(send item: Item) {
+        if item.isLiked {
+            coreDataManager.saveLikedAnimal(with: item)
+        } else {
+            coreDataManager.deleteLikedAnimal(by: item)
+        }
     }
     
 }

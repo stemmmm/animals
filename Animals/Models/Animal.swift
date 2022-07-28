@@ -45,8 +45,8 @@ struct Item: Codable {
     var sexCd: String? // 성별 - M, F, Q
     var neutralizationStatus: String? // 중성화 여부 - Y, N, U
     var weight: String?
-    var description: String? // 특징
-    var discoverdPlace: String? // 발견장소
+    var characteristics: String? // 특징
+    var discoveredPlace: String? // 발견장소
     
     var shelterName: String?
     var shelterAddress: String?
@@ -67,22 +67,22 @@ struct Item: Codable {
         case sexCd = "sexCd"
         case neutralizationStatus = "neuterYn"
         case weight = "weight"
-        case description = "specialMark"
-        case discoverdPlace = "happenPlace"
+        case characteristics = "specialMark"
+        case discoveredPlace = "happenPlace"
         case shelterName = "careNm"
         case shelterAddress = "careAddr"
         case telNumber = "officetel"
     }
     
     // 공고 종료일 계산
-    var noticeLeftDays: Int? {
+    var noticeLeftDays: String? {
         let now = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyyMMdd"
         
         let formattedDate = formatter.date(from: noticeEndDate ?? "0")
-        let leftDays = now.distance(to: formattedDate!) / (60 * 60 * 24)
-        return Int(leftDays)
+        let leftDays = now.distance(to: formattedDate ?? Date()) / (60 * 60 * 24)
+        return String(Int(leftDays))
     }
     
     // 성별 한글로 바꿔줌
@@ -95,8 +95,8 @@ struct Item: Codable {
     }
     
     // 나이 계산
-    var age: Int? {
-        Calendar.current.component(.year, from: Date()) - (Int(birth?.prefix(4) ?? "0") ?? 0) + 1
+    var age: String? {
+        String(Calendar.current.component(.year, from: Date()) - (Int(birth?.prefix(4) ?? "0") ?? 0) + 1)
     }
     
 }
