@@ -14,7 +14,7 @@ final class LikeListViewController: UIViewController {
     
     // MARK: - 네트워크 매니저
     private let coreDataManager = CoreDataManager.shared
-
+    
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +30,7 @@ final class LikeListViewController: UIViewController {
     private func setNavBar() {
         navigationItem.title = "관심 목록"
     }
-
+    
     // MARK: - 컬렉션 뷰 세팅
     private func setCollectionView() {
         collectionView.dataSource = self
@@ -40,7 +40,7 @@ final class LikeListViewController: UIViewController {
         collectionView.register(LikeCell.self, forCellWithReuseIdentifier: "LikeCell")
         collectionView.register(CollectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
     }
-
+    
     // 컬렉션 뷰 오토레이아웃 세팅
     private func setCollectionViewConstraints() {
         view.addSubview(collectionView)
@@ -82,13 +82,12 @@ extension LikeListViewController: UICollectionViewDataSource {
 extension LikeListViewController: ButtonDelegate {
     
     func heartButtonTapped(send likedAnimal: LikedAnimal, _ isLiked: Bool) {
-        if isLiked {
-//            let item = Item(id: likedAnimal.id, detailImage: likedAnimal.detailImage, noticeNumber: likedAnimal.noticeNumber, noticeStartDate: likedAnimal.noticeStartDate, noticeEndDate: likedAnimal.noticeEndDate, kind: likedAnimal.kind, color: likedAnimal.color, birth: likedAnimal.age, sexCd: likedAnimal.sex, neutralizationStatus: likedAnimal.neutralizationStatus, weight: likedAnimal.weight, description: likedAnimal.characteristic, discoveredPlace: likedAnimal.discoveredPlace, shelterName: likedAnimal.shelterName, shelterAddress: likedAnimal.shelterAddress, telNumber: likedAnimal.telNumber, isLiked: isLiked)
-//            item.noticeLeftDays = likedAnimal.noticeLeftDays
-//            coreDataManager.saveLikedAnimal(with: item)
-        } else {
+        if !isLiked {
             coreDataManager.deleteLikedAnimal(by: likedAnimal)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.collectionView.reloadData()
+            }
         }
     }
-
+    
 }

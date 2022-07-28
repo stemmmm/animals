@@ -45,7 +45,7 @@ struct Item: Codable {
     var sexCd: String? // 성별 - M, F, Q
     var neutralizationStatus: String? // 중성화 여부 - Y, N, U
     var weight: String?
-    var description: String? // 특징
+    var characteristics: String? // 특징
     var discoveredPlace: String? // 발견장소
     
     var shelterName: String?
@@ -67,7 +67,7 @@ struct Item: Codable {
         case sexCd = "sexCd"
         case neutralizationStatus = "neuterYn"
         case weight = "weight"
-        case description = "specialMark"
+        case characteristics = "specialMark"
         case discoveredPlace = "happenPlace"
         case shelterName = "careNm"
         case shelterAddress = "careAddr"
@@ -81,7 +81,7 @@ struct Item: Codable {
         formatter.dateFormat = "yyyyMMdd"
         
         let formattedDate = formatter.date(from: noticeEndDate ?? "0")
-        let leftDays = now.distance(to: formattedDate!) / (60 * 60 * 24)
+        let leftDays = now.distance(to: formattedDate ?? Date()) / (60 * 60 * 24)
         return String(Int(leftDays))
     }
     

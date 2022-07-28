@@ -50,14 +50,13 @@ final class CoreDataManager {
         likedAnimal.noticeNumber = item.noticeNumber
         likedAnimal.noticeStartDate = item.noticeStartDate
         likedAnimal.noticeEndDate = item.noticeEndDate
-        likedAnimal.noticeLeftDays = item.noticeLeftDays
         likedAnimal.kind = item.kind
         likedAnimal.color = item.color
-        likedAnimal.age = item.age
-        likedAnimal.sex = item.sex
+        likedAnimal.birth = item.birth
+        likedAnimal.sexCd = item.sexCd
         likedAnimal.neutralizationStatus = item.neutralizationStatus
         likedAnimal.weight = item.weight
-        likedAnimal.characteristic = item.description
+        likedAnimal.characteristics = item.characteristics
         likedAnimal.discoveredPlace = item.discoveredPlace
         likedAnimal.shelterName = item.shelterName
         likedAnimal.shelterAddress = item.shelterAddress
